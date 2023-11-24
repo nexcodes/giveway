@@ -52,8 +52,8 @@ export function UserAuthForm({
         },
       });
 
-      if(error) {
-        throw new Error(error.message)
+      if (error) {
+        throw new Error(error.message);
       }
 
       return toast.message("Check your email", {
@@ -73,11 +73,9 @@ export function UserAuthForm({
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
+
         options: {
-          queryParams: {
-            access_type: "offline",
-            prompt: "consent",
-          },
+          redirectTo: ORIGIN,
         },
       });
 
@@ -86,7 +84,6 @@ export function UserAuthForm({
       }
 
       return;
-
     } catch (error) {
       console.log(error, "GOOGLE_LOGIN_ERROR");
       return toast.error("Sign In Failed!");
