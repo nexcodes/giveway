@@ -15,13 +15,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UserAvatar } from "@/app/(main)/_components/user-avatar";
-import { User } from "@supabase/supabase-js";
 import { useEdgeStore } from "@/lib/edgestore";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import React, { useState } from "react";
 import supabase from "@/lib/supabase";
 import { toast } from "sonner";
 import { Spinner } from "@/components/misc/spinner";
+import { UserData } from "@/types/user-data";
 
 const profileFormSchema = z.object({
   username: z
@@ -42,10 +42,11 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 interface ProfileFormProps {
-  user: User;
+  user: UserData;
+  setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
 }
 
-export function ProfileForm({ user }: ProfileFormProps) {
+export function ProfileForm({ user , setUser}: ProfileFormProps) {
   const [file, setFile] = useState<File | null>();
   const [base64File, setBase64File] = useState<string | ArrayBuffer | null>();
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +54,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
   const { edgestore } = useEdgeStore();
 
   const defaultValues: Partial<ProfileFormValues> = {
-    username: user?.user_metadata?.name ?? "",
+    username: user?.name ?? "",
     email: user?.email ?? "",
   };
 
@@ -72,30 +73,33 @@ export function ProfileForm({ user }: ProfileFormProps) {
       if (file) {
         const res = await edgestore.publicFiles.upload({
           file,
-        });
-
-        const { data, error } = await supabase.auth.updateUser({
-          data: {
-            name: username,
-            picture: res.url,
+          options: {
+            replaceTargetUrl: user?.image,
           },
         });
+
+        const { error } = await supabase
+          .from("users")
+          .update({ name: username, image: res.url })
+          .eq("email", user?.email);
         setFile(null);
         if (error) {
           throw new Error(error.message);
         }
+        setUser({...user , name: username , image: res.url})
         toast.success("Profile Updated Successfully!");
       }
 
       if (!file) {
-        const { data, error } = await supabase.auth.updateUser({
-          data: {
-            name: username,
-          },
-        });
+        const { error } = await supabase
+          .from("users")
+          .update({ name: username })
+          .eq("id", user?.id);
+
         if (error) {
           throw new Error(error.message);
         }
+        setUser({...user , name: username})
         toast.success("Profile Updated Successfully!");
       }
     } catch (error) {
@@ -152,8 +156,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
         <div className="flex items-center space-x-2">
           <UserAvatar
             user={{
-              name: user?.user_metadata?.name || null,
-              image: base64File || user?.user_metadata?.picture || null,
+              name: user?.name || null,
+              image: base64File || user?.image || null,
             }}
           />
           <Label

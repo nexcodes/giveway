@@ -1,13 +1,13 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { ProfileForm } from "../_components/profile-form";
+import { ProfileForm } from "@/app/(main)/_components/profile-form";
 import { useContext } from "react";
 import { UserContext } from "@/context/user";
 import { Spinner } from "@/components/misc/spinner";
 
 export default function SettingsProfilePage() {
-  const { user } = useContext(UserContext);
+  const { user , setUser } = useContext(UserContext);
 
   if (!user)
     return (
@@ -25,7 +25,7 @@ export default function SettingsProfilePage() {
         </p>
       </div>
       <Separator />
-      <ProfileForm user={user} />
+      <ProfileForm user={user} setUser={setUser}/>
     </div>
   );
 }
