@@ -21,12 +21,6 @@ const Navbar = () => {
           <nav className="hidden gap-6 md:flex">
             <Link
               className="flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm text-foreground/60"
-              href="/pricing"
-            >
-              Pricing
-            </Link>
-            <Link
-              className="flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm text-foreground/60"
               href="/blog"
             >
               Blog

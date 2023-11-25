@@ -8,7 +8,7 @@ import axios from "axios";
 import { UserData } from "@/types/user-data";
 interface UserContextProps {
   user?: UserData | null;
-  setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
+  setUser: React.Dispatch<React.SetStateAction<UserData | null | undefined>>;
   handleSignOut: () => void;
 }
 
@@ -23,7 +23,7 @@ export const UserContext = createContext<UserContextProps>({
 });
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-  const [user, setUser] = useState<UserData | null>(null);
+  const [user, setUser] = useState<UserData | null | undefined>(undefined);
 
   useEffect(() => {
     (async () => {

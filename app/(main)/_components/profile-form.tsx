@@ -43,10 +43,10 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 interface ProfileFormProps {
   user: UserData;
-  setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
+  setUser: React.Dispatch<React.SetStateAction<UserData | null | undefined>>;
 }
 
-export function ProfileForm({ user , setUser}: ProfileFormProps) {
+export function ProfileForm({ user, setUser }: ProfileFormProps) {
   const [file, setFile] = useState<File | null>();
   const [base64File, setBase64File] = useState<string | ArrayBuffer | null>();
   const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +86,7 @@ export function ProfileForm({ user , setUser}: ProfileFormProps) {
         if (error) {
           throw new Error(error.message);
         }
-        setUser({...user , name: username , image: res.url})
+        setUser({ ...user, name: username, image: res.url });
         toast.success("Profile Updated Successfully!");
       }
 
@@ -99,7 +99,7 @@ export function ProfileForm({ user , setUser}: ProfileFormProps) {
         if (error) {
           throw new Error(error.message);
         }
-        setUser({...user , name: username})
+        setUser({ ...user, name: username });
         toast.success("Profile Updated Successfully!");
       }
     } catch (error) {
