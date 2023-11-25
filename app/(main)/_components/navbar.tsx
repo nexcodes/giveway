@@ -7,9 +7,12 @@ import Link from "next/link";
 import { Spinner } from "../../../components/misc/spinner";
 import { UserAccount } from "./user-account";
 import { UserContext } from "@/context/user";
+import { LanguageContext } from "@/context/language";
 
 const Navbar = () => {
   const { user } = useContext(UserContext);
+  const { language } = useContext(LanguageContext);
+
   return (
     <header className="container z-40 bg-background">
       <div className="flex h-20 items-center justify-between py-6">
@@ -35,7 +38,7 @@ const Navbar = () => {
           {user === undefined ? (
             <Spinner />
           ) : user ? (
-            <UserAccount user={user} />
+            <UserAccount language={language} user={user} />
           ) : (
             <Link href={"/login"}>
               <Button variant={"outline"}>Sign In</Button>

@@ -1,14 +1,35 @@
 "use client";
 
 import React, { useContext } from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { AlignLeft, Gift } from "lucide-react";
 import Link from "next/link";
 import { Spinner } from "@/components/misc/spinner";
 import { UserContext } from "@/context/user";
+import LanguageSwitch from "./language-switch";
+import { LanguageContext } from "@/context/language";
+import { ThemeToggle } from "@/components/theme-toggle";
+
+const content = {
+  English: {
+    SignIn: "Sign In",
+    Dashboard: "Dashboard",
+    Blog: "Blog",
+    Pricing: "Pricing",
+  },
+  French: {
+    SignIn: "Se connecter",
+    Dashboard: "Tableau de bord",
+    Blog: "Blog",
+    Pricing: "Tarifs",
+  },
+};
 
 const Navbar = () => {
   const { user } = useContext(UserContext);
+  const { language } = useContext(LanguageContext);
+
+  const { SignIn, Dashboard, Blog, Pricing } = content[language];
   return (
     <header className="container z-40 bg-background">
       <div className="flex h-20 items-center justify-between py-6">
@@ -22,13 +43,13 @@ const Navbar = () => {
               className="flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm text-foreground/60"
               href="/pricing"
             >
-              Pricing
+              {Pricing}
             </Link>
             <Link
               className="flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm text-foreground/60"
               href="/blog"
             >
-              Blog
+              {Blog}
             </Link>
           </nav>
           <button className="flex items-center space-x-2 md:hidden">
@@ -36,25 +57,29 @@ const Navbar = () => {
             <span className="sr-only">Menu</span>
           </button>
         </div>
-        <nav>
-          {user === undefined ? (
-            <Spinner />
-          ) : user?.email ? (
-            <Link
-              href={"/dashboard"}
-              className={buttonVariants({ variant: "ghost" })}
-            >
-              Dashboard
-            </Link>
-          ) : (
-            <Link
-              href={"/login"}
-              className={buttonVariants({ variant: "outline" })}
-            >
-              Sign In
-            </Link>
-          )}
-        </nav>
+        <div className="flex items-center space-x-2">
+          <nav>
+            {user === undefined ? (
+              <Spinner />
+            ) : user?.email ? (
+              <Link
+                href={"/dashboard"}
+                className={buttonVariants({ variant: "ghost" })}
+              >
+                {Dashboard}
+              </Link>
+            ) : (
+              <Link
+                href={"/login"}
+                className={buttonVariants({ variant: "outline" })}
+              >
+                {SignIn}
+              </Link>
+            )}
+          </nav>
+          <LanguageSwitch />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

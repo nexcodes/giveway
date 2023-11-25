@@ -13,13 +13,31 @@ import { UserAvatar } from "./user-avatar";
 import React, { useContext } from "react";
 import { UserContext } from "@/context/user";
 import { UserData } from "@/types/user-data";
+import { LanguagesType } from "@/types/language";
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: UserData | null;
+  language: LanguagesType;
 }
 
-export function UserAccount({ user }: UserAccountNavProps) {
+const content = {
+  English: {
+    dashboard: "Dashboard",
+    settings: "Settings",
+    billing: "Billing",
+    signOut: "Sign out"
+  },
+  French: {
+    dashboard: "Tableau de bord",
+    settings: "Paramètres",
+    billing: "Facturation",
+    signOut: "Se déconnecter"
+  }
+}
+
+export function UserAccount({ user, language }: UserAccountNavProps) {
   const { handleSignOut } = useContext(UserContext);
+  const { dashboard, settings, billing, signOut } = content[language];
 
   return (
     <DropdownMenu>
@@ -47,17 +65,17 @@ export function UserAccount({ user }: UserAccountNavProps) {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild className="cursor-pointer">
-          <Link href="/dashboard">Dashboard</Link>
+          <Link href="/dashboard">{dashboard}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className="cursor-pointer">
-          <Link href="/dashboard/billing">Billing</Link>
+          <Link href="/dashboard/billing">{billing}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className="cursor-pointer">
-          <Link href="/dashboard/settings">Settings</Link>
+          <Link href="/dashboard/appearance">{settings}</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer" onSelect={handleSignOut}>
-          Sign out
+          {signOut}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

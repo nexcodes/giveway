@@ -15,19 +15,37 @@ import { Spinner } from "@/components/misc/spinner";
 import GoogleIcon from "@/components/icons/google-icon";
 import supabase from "@/lib/supabase";
 import { useOrigin } from "@/hooks/use-origin";
+import { LanguagesType } from "@/types/language";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   IsRegisterUser?: boolean;
+  language: LanguagesType;
 }
 
 type FormData = z.infer<typeof userAuthSchema>;
 
+const content = {
+  English: {
+    instruction: "Sign In with Email",
+    Continue: "OR CONTINUE WITH",
+    Email: "Email",
+  },
+  French: {
+    instruction: "Se connecter avec Email",
+    Continue: "OU CONTINUER AVEC",
+    Email: "Email",
+  },
+};
+
 export function UserAuthForm({
   className,
   IsRegisterUser,
+  language = "English",
   ...props
 }: UserAuthFormProps) {
   const ORIGIN = useOrigin();
+
+  const { instruction, Continue, Email } = content[language];
 
   const {
     register,
@@ -98,7 +116,7 @@ export function UserAuthForm({
         <div className="grid gap-2">
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
-              Email
+              {Email}
             </Label>
             <Input
               id="email"
@@ -121,7 +139,7 @@ export function UserAuthForm({
             disabled={isLoading || isGoogleLoading}
           >
             {isLoading && <Spinner />}
-            Sign In with Email
+            {instruction}
           </button>
         </div>
       </form>
@@ -131,7 +149,7 @@ export function UserAuthForm({
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
+            {Continue}
           </span>
         </div>
       </div>
