@@ -1,11 +1,11 @@
 export interface Post {
-  id: string /* primary key */;
-  title: string;
-  description: string;
-  image: string;
+  author_id: string | null;
   content: string | null;
-  published: boolean;
   created_at: string;
-  updated_at: string;
-  author_id: string;
+  description: string | null;
+  id: string;
+  image: string | null;
+  published: boolean | null;
+  title: string | null;
+  updated_at: string | null;
 }
