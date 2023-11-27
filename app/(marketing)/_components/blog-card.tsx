@@ -14,7 +14,7 @@ const BlogCard = ({
   return (
     <article className="group relative flex flex-col space-y-2">
       <div className="my-4 relative overflow-hidden w-full pt-[56.25%] rounded-md border bg-muted transition-colors">
-        <Image src={image} alt="alt" fill />
+        <Image src={image ?? "/images/cover.jpg"} alt="alt" fill />
       </div>
       <h2 className="text-2xl font-extrabold">{title}</h2>
       <p className="text-muted-foreground">{description}</p>
