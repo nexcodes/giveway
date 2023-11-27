@@ -1,41 +1,41 @@
-import { redirect } from "next/navigation"
+import { redirect } from "next/navigation";
 
-import { stripe } from "@/lib/stripe"
-import { getUserSubscriptionPlan } from "@/lib/subscription"
-import { getUser } from "@/actions/get-user"
-import { BillingForm } from "@/app/(main)/_components/billing-form"
+import { stripe } from "@/lib/stripe";
+import { getUserSubscriptionPlan } from "@/lib/subscription";
+import { getUser } from "@/actions/supabase-actions";
+import { BillingForm } from "@/app/(main)/_components/billing-form";
 
 export const metadata = {
   title: "Billing",
   description: "Manage billing and your subscription plan.",
-}
+};
 
 export default async function BillingPage() {
-  const user = await getUser()
-  
+  const user = await getUser();
+
   if (!user) {
-    redirect("/login")
+    redirect("/login");
   }
 
-  const subscriptionPlan = await getUserSubscriptionPlan(user.id)
+  const subscriptionPlan = await getUserSubscriptionPlan(user.id);
 
   // If user has a pro plan, check cancel status on Stripe.
-  let isCanceled = false
+  let isCanceled = false;
   if (subscriptionPlan.isPro && subscriptionPlan.stripe_subscription_id) {
     const stripePlan = await stripe.subscriptions.retrieve(
       subscriptionPlan.stripe_subscription_id
-    )
-    isCanceled = stripePlan.cancel_at_period_end
+    );
+    isCanceled = stripePlan.cancel_at_period_end;
   }
 
   return (
-      <div className="grid gap-8">
-        <BillingForm
-          subscriptionPlan={{
-            ...subscriptionPlan,
-            isCanceled,
-          }}
-        />
-      </div>
-  )
+    <div className="grid gap-8">
+      <BillingForm
+        subscriptionPlan={{
+          ...subscriptionPlan,
+          isCanceled,
+        }}
+      />
+    </div>
+  );
 }
