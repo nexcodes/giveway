@@ -3,7 +3,7 @@ export type Json =
   | number
   | boolean
   | null
-  | { [key: string]: Json }
+  | { [key: string]: Json | undefined }
   | Json[]
 
 export interface Database {
@@ -11,73 +11,78 @@ export interface Database {
     Tables: {
       posts: {
         Row: {
-          author_id: string
-          content: Json | null
+          author_id: string | null
+          content: string | null
           created_at: string
+          description: string | null
           id: string
-          published: boolean
-          title: string
-          updated_at: string
+          image: string | null
+          published: boolean | null
+          title: string | null
+          updated_at: string | null
         }
         Insert: {
-          author_id: string
-          content?: Json | null
+          author_id?: string | null
+          content?: string | null
           created_at?: string
+          description?: string | null
           id?: string
-          published?: boolean
-          title: string
-          updated_at?: string
+          image?: string | null
+          published?: boolean | null
+          title?: string | null
+          updated_at?: string | null
         }
         Update: {
-          author_id?: string
-          content?: Json | null
+          author_id?: string | null
+          content?: string | null
           created_at?: string
+          description?: string | null
           id?: string
-          published?: boolean
-          title?: string
-          updated_at?: string
+          image?: string | null
+          published?: boolean | null
+          title?: string | null
+          updated_at?: string | null
         }
+        Relationships: []
       }
       users: {
         Row: {
-          created_at: string | null
+          created_at: string
           email: string | null
-          email_verified: string | null
           id: string
           image: string | null
+          isAdmin: boolean | null
           name: string | null
           stripe_current_period_end: string | null
           stripe_customer_id: string | null
           stripe_price_id: string | null
           stripe_subscription_id: string | null
-          updated_at: string | null
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           email?: string | null
-          email_verified?: string | null
-          id: string
-          image?: string | null
-          name?: string | null
-          stripe_current_period_end?: string | null
-          stripe_customer_id?: string | null
-          stripe_price_id?: string | null
-          stripe_subscription_id?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          email?: string | null
-          email_verified?: string | null
           id?: string
           image?: string | null
+          isAdmin?: boolean | null
           name?: string | null
           stripe_current_period_end?: string | null
           stripe_customer_id?: string | null
           stripe_price_id?: string | null
           stripe_subscription_id?: string | null
-          updated_at?: string | null
         }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          image?: string | null
+          isAdmin?: boolean | null
+          name?: string | null
+          stripe_current_period_end?: string | null
+          stripe_customer_id?: string | null
+          stripe_price_id?: string | null
+          stripe_subscription_id?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {

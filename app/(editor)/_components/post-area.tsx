@@ -9,10 +9,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import Buttons from "./buttons";
 
 interface EditorProps {
-  post: Pick<
-    Post,
-    "id" | "title" | "content" | "published" | "description" | "image"
-  >;
+  post: Pick< Post, "id" | "title" | "description" | "published" | "image" | "content">;
 }
 
 export function PostArea({ post }: EditorProps) {
