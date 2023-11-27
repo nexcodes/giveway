@@ -17,9 +17,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { LanguagesType } from "@/types/language";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
+import { useLanguageStore } from "@/zustand/language";
+
 const appearanceFormSchema = z.object({
   theme: z.enum(["light", "dark", "system"], {
     required_error: "Please select a theme.",
@@ -31,11 +32,6 @@ const appearanceFormSchema = z.object({
 });
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>;
-
-interface AppearanceFormProps {
-  language: LanguagesType;
-  changeLanguage: (language: LanguagesType) => void;
-}
 
 const content = {
   English: {
@@ -60,10 +56,9 @@ const content = {
   },
 };
 
-export function AppearanceForm({
-  language,
-  changeLanguage,
-}: AppearanceFormProps) {
+export function AppearanceForm() {
+  const { language, setLanguage } = useLanguageStore();
+
   const { theme, setTheme } = useTheme();
 
   type Theme = "light" | "dark" | "system" | undefined;
@@ -94,7 +89,7 @@ export function AppearanceForm({
       return toast.error("Nothing to update!");
     }
     if (language !== defaultValues.language) {
-      changeLanguage(language);
+      setLanguage(language);
     }
     if (theme !== defaultValues.theme) {
       setTheme(theme);

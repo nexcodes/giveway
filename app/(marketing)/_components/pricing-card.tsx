@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { UserData } from "@/types/user-data";
 import { Check, X } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -12,6 +13,7 @@ interface PricingCardProps {
     content: string;
     check: boolean;
   }[];
+  user: UserData | null;
 }
 
 const PricingCard = ({
@@ -20,7 +22,9 @@ const PricingCard = ({
   bill,
   button,
   features,
+  user
 }: PricingCardProps) => {
+
   return (
     <div className="grid w-full items-start gap-10 rounded-lg border p-10 md:grid-cols-[1fr_200px]">
       <div className="grid gap-6">
@@ -43,7 +47,7 @@ const PricingCard = ({
           <h4 className="text-7xl font-bold">{price}</h4>
           <p className="text-sm font-medium text-muted-foreground">{bill}</p>
         </div>
-        <Link href={"/"}>
+        <Link href={user?.email ? "/dashboard/billing" : "/login"}>
           <Button className="px-8">{button}</Button>
         </Link>
       </div>

@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useContext } from "react";
+import React from "react";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
-import { LanguageContext } from "@/context/language";
+import { useLanguageStore } from "@/zustand/language";
 
 const myFont = localFont({ src: "../../../fonts/CalSans-SemiBold.ttf" });
 
@@ -27,7 +27,7 @@ const content = {
 };
 
 const Hero = () => {
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguageStore();
   const { title, description, getStarted, pricing } = content[language];
   return (
     <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">

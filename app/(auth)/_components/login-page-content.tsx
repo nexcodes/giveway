@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useContext } from "react";
-import { UserAuthForm } from "./user-auth-form";
+import React from "react";
+import UserAuthForm from "./user-auth-form";
 import Link from "next/link";
 import { ChevronLeft, Gift } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { LanguageContext } from "@/context/language";
+import { useLanguageStore } from "@/zustand/language";
 
 const content = {
   English: {
@@ -24,7 +24,8 @@ const content = {
 };
 
 const LoginPageContent = () => {
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguageStore();
+
   const { title, SignUp, description, back } = content[language];
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
@@ -46,7 +47,7 @@ const LoginPageContent = () => {
           <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
           <p className="text-sm text-muted-foreground">{description}</p>
         </div>
-        <UserAuthForm language={language}/>
+        <UserAuthForm />
         <p className="px-8 text-center text-sm text-muted-foreground">
           <Link
             href="/register"

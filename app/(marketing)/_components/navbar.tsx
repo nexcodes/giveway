@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useContext } from "react";
+import React from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { AlignLeft, Gift } from "lucide-react";
 import Link from "next/link";
 import { Spinner } from "@/components/misc/spinner";
-import { UserContext } from "@/context/user";
 import LanguageSwitch from "./language-switch";
-import { LanguageContext } from "@/context/language";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useLanguageStore } from "@/zustand/language";
+import { UserData } from "@/types/user-data";
 
 const content = {
   English: {
@@ -25,13 +25,16 @@ const content = {
   },
 };
 
-const Navbar = () => {
-  const { user } = useContext(UserContext);
-  const { language } = useContext(LanguageContext);
+interface NavbarProps {
+  user: UserData | null;
+}
+
+const Navbar = ({ user }: NavbarProps) => {
+  const { language } = useLanguageStore();
 
   const { SignIn, Dashboard, Blog, Pricing } = content[language];
   return (
-    <header className="container z-40 bg-background">
+    <header className="container px-4 sm:px-8 z-40 bg-background">
       <div className="flex h-20 items-center justify-between py-6">
         <div className="flex gap-6 md:gap-10">
           <Link className="hidden items-center space-x-2 md:flex" href="/">

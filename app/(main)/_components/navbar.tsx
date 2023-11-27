@@ -1,20 +1,18 @@
 "use client";
 
-import React, { useContext } from "react";
+import React from "react";
 import { Button } from "../../../components/ui/button";
 import { AlignLeft, Gift } from "lucide-react";
 import Link from "next/link";
 import { Spinner } from "../../../components/misc/spinner";
 import { UserAccount } from "./user-account";
-import { UserContext } from "@/context/user";
-import { LanguageContext } from "@/context/language";
 
-const Navbar = () => {
-  const { user } = useContext(UserContext);
-  const { language } = useContext(LanguageContext);
+import { useLanguageStore } from "@/zustand/language";
+const Navbar = ({user}: any) => {
+  const { language } = useLanguageStore();
 
   return (
-    <header className="container z-40 bg-background">
+    <header className="container px-4 sm:px-8 z-40 bg-background">
       <div className="flex h-20 items-center justify-between py-6">
         <div className="flex gap-6 md:gap-10">
           <Link className="hidden items-center space-x-2 md:flex" href="/">

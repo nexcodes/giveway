@@ -1,5 +1,5 @@
-import { LanguageProvider } from "@/context/language";
-import { UserProvider } from "@/context/user";
+// import { LanguageProvider } from "@/context/language";
+// import { UserProvider } from "@/context/user";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import React from "react";
 import { ThemeProvider } from "./theme-provider";
@@ -10,8 +10,8 @@ interface ProviderProps {
 
 const Provider = ({ children }: ProviderProps) => {
   return (
-    <UserProvider>
-      <LanguageProvider>
+    // <UserProvider>
+      // <LanguageProvider>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -20,8 +20,8 @@ const Provider = ({ children }: ProviderProps) => {
         >
           <EdgeStoreProvider>{children}</EdgeStoreProvider>
         </ThemeProvider>
-      </LanguageProvider>
-    </UserProvider>
+      // </LanguageProvider>
+    // </UserProvider>
   );
 };
 

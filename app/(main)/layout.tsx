@@ -1,3 +1,4 @@
+import { getUser } from "@/actions/supabase-actions";
 import Navbar from "./_components/navbar";
 
 export default async function MainLayout({
@@ -5,10 +6,11 @@ export default async function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const user = await getUser();
   return (
     <main>
       <>
-        <Navbar />
+        <Navbar user={user} />
         {children}
       </>
     </main>

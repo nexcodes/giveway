@@ -1,107 +1,110 @@
-"use client";
+// "use client";
 
-import supabase from "@/lib/supabase";
-import React, { createContext, useEffect, useState } from "react";
-import { toast } from "sonner";
-import getSession from "@/actions/get-session";
-import axios from "axios";
-import { UserData } from "@/types/user-data";
-interface UserContextProps {
-  user?: UserData | null;
-  setUser: React.Dispatch<React.SetStateAction<UserData | null | undefined>>;
-  handleSignOut: () => void;
-}
+// import React, { createContext, useEffect, useState } from "react";
+// import { toast } from "sonner";
+// import axios from "axios";
+// import { UserData } from "@/types/user-data";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { Database } from "@/types/db";
+// import { getAuthUser } from "@/actions/supabase-actions";
+// interface UserContextProps {
+//   user?: UserData | null;
+//   setUser: React.Dispatch<React.SetStateAction<UserData | null | undefined>>;
+//   handleSignOut: () => void;
+// }
 
-interface UserProviderProps {
-  children: React.ReactNode;
-}
+// interface UserProviderProps {
+//   children: React.ReactNode;
+// }
 
-export const UserContext = createContext<UserContextProps>({
-  user: null,
-  setUser: () => {},
-  handleSignOut: () => {},
-});
+// export const UserContext = createContext<UserContextProps>({
+//   user: null,
+//   setUser: () => {},
+//   handleSignOut: () => {},
+// });
 
-export const UserProvider = ({ children }: UserProviderProps) => {
-  const [user, setUser] = useState<UserData | null | undefined>(undefined);
+// export const UserProvider = ({ children }: UserProviderProps) => {
+//   const supabase = createClientComponentClient<Database>();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const AuthUser = await getSession();
+//   const [user, setUser] = useState<UserData | null | undefined>(undefined);
 
-        if (!AuthUser) {
-          setUser(null);
-          return;
-        }
+//   useEffect(() => {
+//     (async () => {
+//       try {
+//         const AuthUser = await getAuthUser();
 
-        const { data, error } = await supabase
-          .from("users")
-          .select()
-          .eq("email", AuthUser?.email);
+//         if (!AuthUser?.email) {
+//           setUser(null);
+//           return;
+//         }
 
-        if (error) {
-          throw new Error(`SELECT USER ${error.message}`);
-        }
+//         const { data, error } = await supabase
+//           .from("users")
+//           .select()
+//           .eq("email", AuthUser?.email);
 
-        if (data[0]?.email === AuthUser?.email) {
-          setUser(data[0]);
-          return;
-        }
+//         if (error) {
+//           throw new Error(`SELECT USER ${error.message}`);
+//         }
 
-        if (!data[0]?.email) {
-          const response = await axios.post("/api/stripe/createAccount", {
-            email: AuthUser?.email,
-            name: AuthUser?.user_metadata?.name,
-          });
+//         if (data[0]?.email === AuthUser?.email) {
+//           setUser(data[0]);
+//           return;
+//         }
 
-          const customer_id = response.data.id;
+//         if (!data[0]?.email) {
+//           const response = await axios.post("/api/stripe/createAccount", {
+//             email: AuthUser?.email,
+//             name: AuthUser?.user_metadata?.name,
+//           });
 
-          const { data, error } = await supabase.from("users").insert([
-            {
-              id: AuthUser?.id,
-              email: AuthUser?.email,
-              name: AuthUser?.user_metadata?.name,
-              image: AuthUser?.user_metadata?.picture,
-              customer_id,
-            },
-          ]);
+//           const stripe_customer_id = response.data.id;
 
-          if (error) {
-            throw new Error(`!DATA ${error.message}`);
-          }
+//           const { data, error } = await supabase.from("users").insert([
+//             {
+//               id: AuthUser?.id,
+//               email: AuthUser?.email,
+//               name: AuthUser?.user_metadata?.name,
+//               image: AuthUser?.user_metadata?.picture,
+//               stripe_customer_id,
+//             },
+//           ]);
 
-          if (data) {
-            setUser(data[0]);
-          }
+//           if (error) {
+//             throw new Error(`!DATA ${error.message}`);
+//           }
 
-          return;
-        }
-        setUser(null);
-      } catch (error) {
-        setUser(null);
-        console.log(error);
-      }
-    })();
-  }, []);
+//           if (data) {
+//             setUser(data[0]);
+//           }
 
-  const handleSignOut = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        throw new Error(error.message);
-      }
-      toast.success("Signed out successfully!");
-      setUser(null);
-    } catch (error) {
-      toast.error("Failed to Sign out!");
-      console.log(error);
-    }
-  };
+//           return;
+//         }
+//         setUser(null);
+//       } catch (error) {
+//         setUser(null);
+//         console.log(error);
+//       }
+//     })();
+//   }, [supabase]);
 
-  return (
-    <UserContext.Provider value={{ user, setUser, handleSignOut }}>
-      {children}
-    </UserContext.Provider>
-  );
-};
+//   const handleSignOut = async () => {
+//     try {
+//       const { error } = await supabase.auth.signOut();
+//       if (error) {
+//         throw new Error(error.message);
+//       }
+//       toast.success("Signed out successfully!");
+//       setUser(null);
+//     } catch (error) {
+//       toast.error("Failed to Sign out!");
+//       console.log(error);
+//     }
+//   };
+
+//   return (
+//     <UserContext.Provider value={{ user, setUser, handleSignOut }}>
+//       {children}
+//     </UserContext.Provider>
+//   );
+// };

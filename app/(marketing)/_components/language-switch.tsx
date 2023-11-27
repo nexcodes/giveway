@@ -1,7 +1,6 @@
 "use client";
 
 import { buttonVariants } from "@/components/ui/button";
-import { LanguageContext } from "@/context/language";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -10,11 +9,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Globe } from "lucide-react";
-import React, { useContext } from "react";
+import React from "react";
 import { LanguagesType } from "@/types/language";
+import { useLanguageStore } from "@/zustand/language";
 
 const LanguageSwitch = () => {
-  const { language, changeLanguage } = useContext(LanguageContext);
+  const { language, setLanguage } = useLanguageStore();
 
   const languages = ["English", "French"];
   return (
@@ -29,7 +29,7 @@ const LanguageSwitch = () => {
           <DropdownMenuItem
             key={lang}
             className={cn("cursor-pointer", language === lang && "bg-accent")}
-            onClick={() => changeLanguage(lang as LanguagesType)}
+            onClick={() => setLanguage(lang as LanguagesType)}
           >
             {lang}
           </DropdownMenuItem>

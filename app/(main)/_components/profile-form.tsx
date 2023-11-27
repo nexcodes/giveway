@@ -18,11 +18,12 @@ import { UserAvatar } from "@/app/(main)/_components/user-avatar";
 import { useEdgeStore } from "@/lib/edgestore";
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
-import supabase from "@/lib/supabase";
 import { toast } from "sonner";
 import { Spinner } from "@/components/misc/spinner";
 import { UserData } from "@/types/user-data";
-import { LanguagesType } from "@/types/language";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/types/db";
+import { useLanguageStore } from "@/zustand/language";
 
 const profileFormSchema = z.object({
   username: z
@@ -44,8 +45,6 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 interface ProfileFormProps {
   user: UserData;
-  setUser: React.Dispatch<React.SetStateAction<UserData | null | undefined>>;
-  language: LanguagesType;
 }
 
 const content = {
@@ -63,7 +62,10 @@ const content = {
   },
 };
 
-export function ProfileForm({ user, setUser, language }: ProfileFormProps) {
+export function ProfileForm({ user }: ProfileFormProps) {
+  const supabase = createClientComponentClient<Database>();
+  const { language } = useLanguageStore();
+
   const [file, setFile] = useState<File | null>();
   const [base64File, setBase64File] = useState<string | ArrayBuffer | null>();
   const [isLoading, setIsLoading] = useState(false);
@@ -94,19 +96,18 @@ export function ProfileForm({ user, setUser, language }: ProfileFormProps) {
         const res = await edgestore.publicFiles.upload({
           file,
           options: {
-            replaceTargetUrl: user?.image,
+            replaceTargetUrl: user?.image ?? "",
           },
         });
 
         const { error } = await supabase
           .from("users")
           .update({ name: username, image: res.url })
-          .eq("email", user?.email);
+          .eq("email", user?.email ?? "");
         setFile(null);
         if (error) {
           throw new Error(error.message);
         }
-        setUser({ ...user, name: username, image: res.url });
         toast.success("Profile Updated Successfully!");
       }
 
@@ -119,7 +120,6 @@ export function ProfileForm({ user, setUser, language }: ProfileFormProps) {
         if (error) {
           throw new Error(error.message);
         }
-        setUser({ ...user, name: username });
         toast.success("Profile Updated Successfully!");
       }
     } catch (error) {

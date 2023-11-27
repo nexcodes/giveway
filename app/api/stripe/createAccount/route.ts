@@ -1,8 +1,7 @@
-import Stripe from "stripe";
+import { stripe } from "@/lib/stripe";
 
 export async function POST(req: Request) {
   const { email, name } = await req.json();
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
   try {
     const customer = await stripe.customers.create({

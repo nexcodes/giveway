@@ -3,8 +3,8 @@
 import { Separator } from "@/components/ui/separator";
 import React, { useContext } from "react";
 import { SidebarNav } from "./sidebar";
-import { LanguageContext } from "@/context/language";
 
+import { useLanguageStore } from "@/zustand/language";
 interface LayoutBodyProps {
   children: React.ReactNode;
 }
@@ -52,7 +52,7 @@ const content = {
 };
 
 const LayoutBody = ({ children }: LayoutBodyProps) => {
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguageStore();
   const { title, subtitle } = content[language];
   return (
     <>

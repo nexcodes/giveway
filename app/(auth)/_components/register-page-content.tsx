@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import React, { useContext } from "react";
-import { UserAuthForm } from "./user-auth-form";
+import React from "react";
+import { UserAuthForm } from "./user-auth-form-des";
 import { Gift } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { LanguageContext } from "@/context/language";
+import { useLanguageStore } from "@/zustand/language";
 
 const content = {
   English: {
@@ -30,7 +30,8 @@ const content = {
 };
 
 const RegisterPageContent = () => {
-  const { language } = useContext(LanguageContext);
+
+  const { language } = useLanguageStore();
   const { SignIn, title, description, contract, and, terms, policy } = content[language];
 
   return (
@@ -53,7 +54,7 @@ const RegisterPageContent = () => {
             <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
             <p className="text-sm text-muted-foreground">{description}</p>
           </div>
-          <UserAuthForm IsRegisterUser language={language}/>
+          <UserAuthForm IsRegisterUser language={language} />
           <p className="px-8 text-center text-sm text-muted-foreground">
             {contract}{" "}
             <Link

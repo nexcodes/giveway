@@ -10,8 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "./user-avatar";
-import React, { useContext } from "react";
-import { UserContext } from "@/context/user";
+import React from "react";
 import { UserData } from "@/types/user-data";
 import { LanguagesType } from "@/types/language";
 
@@ -22,22 +21,24 @@ interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const content = {
   English: {
+    Admin: "Admin Panel",
     dashboard: "Dashboard",
     settings: "Settings",
     billing: "Billing",
-    signOut: "Sign out"
+    signOut: "Sign out",
   },
   French: {
+    Admin: "panneau d'administration",
     dashboard: "Tableau de bord",
     settings: "Paramètres",
     billing: "Facturation",
-    signOut: "Se déconnecter"
-  }
-}
+    signOut: "Se déconnecter",
+  },
+};
 
 export function UserAccount({ user, language }: UserAccountNavProps) {
-  const { handleSignOut } = useContext(UserContext);
-  const { dashboard, settings, billing, signOut } = content[language];
+  // const { handleSignOut } = useContext(UserContext);
+  const { Admin, dashboard, settings, billing, signOut } = content[language];
 
   return (
     <DropdownMenu>
@@ -53,9 +54,7 @@ export function UserAccount({ user, language }: UserAccountNavProps) {
       <DropdownMenuContent align="end">
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
-            {user?.name && (
-              <p className="font-medium">{user?.name}</p>
-            )}
+            {user?.name && <p className="font-medium">{user?.name}</p>}
             {user?.email && (
               <p className="w-[200px] truncate text-sm text-muted-foreground">
                 {user?.email}
@@ -64,6 +63,11 @@ export function UserAccount({ user, language }: UserAccountNavProps) {
           </div>
         </div>
         <DropdownMenuSeparator />
+        {user?.isAdmin && (
+          <DropdownMenuItem asChild className="cursor-pointer">
+            <Link href="/admin">{Admin}</Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem asChild className="cursor-pointer">
           <Link href="/dashboard">{dashboard}</Link>
         </DropdownMenuItem>
@@ -74,7 +78,7 @@ export function UserAccount({ user, language }: UserAccountNavProps) {
           <Link href="/dashboard/appearance">{settings}</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" onSelect={handleSignOut}>
+        <DropdownMenuItem className="cursor-pointer" onSelect={() => {}}>
           {signOut}
         </DropdownMenuItem>
       </DropdownMenuContent>

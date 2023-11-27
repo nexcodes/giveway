@@ -1,9 +1,9 @@
 "use client";
 
-import { LanguageContext } from "@/context/language";
 import { cn } from "@/lib/utils";
+import { useLanguageStore } from "@/zustand/language";
 import localFont from "next/font/local";
-import React, { useContext } from "react";
+import React from "react";
 
 const myFont = localFont({ src: "../../../fonts/CalSans-SemiBold.ttf" });
 
@@ -31,7 +31,7 @@ const content = {
 };
 
 const Participate = () => {
-  const { language } = useContext(LanguageContext);
+  const { language } = useLanguageStore();
 
   const { title, step1, step2, step3, step1desc, step2desc, step3desc } =
     content[language];
