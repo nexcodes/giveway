@@ -27,6 +27,8 @@ export default async function EditorPage({ params }: EditorPageProps) {
         title: post.title,
         content: post.content,
         published: post.published,
+        description: post.description,
+        image: post.image
       }}
     />
   )
