@@ -35,7 +35,7 @@ export function PostArea({ post }: EditorProps) {
           autoFocus
           id="title"
           ref={titleRef}
-          defaultValue={post.title}
+          defaultValue={post.title ?? undefined}
           placeholder="Post title"
           className="w-full resize-none appearance-none overflow-hidden bg-transparent text-3xl sm:text-4xl lg:text-5xl font-bold focus:outline-none"
         />
