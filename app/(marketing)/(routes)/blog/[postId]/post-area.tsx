@@ -18,7 +18,7 @@ export function PostArea({ post }: EditorProps) {
         <TextareaAutosize
           autoFocus
           id="title"
-          defaultValue={post.title}
+          defaultValue={post.title ?? undefined}
           placeholder="Post title"
           disabled={true}
           className="w-full resize-none appearance-none overflow-hidden bg-transparent text-3xl sm:text-4xl lg:text-5xl font-bold focus:outline-none"
