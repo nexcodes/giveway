@@ -1,14 +1,14 @@
 import { createServerSupabaseClient } from "@/actions/supabase-actions";
-import NoPost from "@/app/(main)/_components/no-post";
-import PostCard from "@/app/(main)/_components/post-card";
-import { PostCreateButton } from "@/app/(main)/_components/post-create-button";
+import { PrizeCreateButton } from "@/app/(main)/_components/prize-create-button";
+import NoPrize from "@/app/(main)/_components/no-prize";
+import PrizeCard from "@/app/(main)/_components/prize-card";
 
 export default async function Dashboard() {
 
   const supabase = createServerSupabaseClient();
 
-  const { data: posts } = await supabase
-    .from("posts")
+  const { data: prize } = await supabase
+    .from("prizes")
     .select("id, title, created_at")
     .order("created_at", { ascending: false });
 
@@ -16,21 +16,21 @@ export default async function Dashboard() {
     <div className="grid items-start gap-8">
       <div className="flex items-center justify-between px-2">
         <div className="grid gap-1">
-          <h1 className="font-semibold text-3xl md:text-4xl">Posts</h1>
+          <h1 className="font-semibold text-3xl md:text-4xl">Prizes</h1>
           <p className="text-lg text-muted-foreground">
-            Create and manage posts.
+            Create and manage Prizes.
           </p>
         </div>
-        <PostCreateButton />
+        <PrizeCreateButton />
       </div>
-      {posts?.length ? (
+      {prize?.length ? (
         <div className="divide-y divide-border rounded-md border">
-          {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
+          {prize.map((prize) => (
+            <PrizeCard key={prize.id} prize={prize} />
           ))}
         </div>
       ) : (
-        <NoPost />
+        <NoPrize />
       )}
     </div>
   );

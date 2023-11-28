@@ -45,6 +45,42 @@ export interface Database {
         }
         Relationships: []
       }
+      prizes: {
+        Row: {
+          author_id: string | null
+          created_at: string
+          credit_need: number | null
+          id: string
+          image: string | null
+          participants: string[] | null
+          time_end: string | null
+          title: string | null
+          winner: string | null
+        }
+        Insert: {
+          author_id?: string | null
+          created_at?: string
+          credit_need?: number | null
+          id?: string
+          image?: string | null
+          participants?: string[] | null
+          time_end?: string | null
+          title?: string | null
+          winner?: string | null
+        }
+        Update: {
+          author_id?: string | null
+          created_at?: string
+          credit_need?: number | null
+          id?: string
+          image?: string | null
+          participants?: string[] | null
+          time_end?: string | null
+          title?: string | null
+          winner?: string | null
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           created_at: string
@@ -53,7 +89,7 @@ export interface Database {
           image: string | null
           isAdmin: boolean | null
           name: string | null
-          stripe_current_period_end: string | null
+          stripe_current_period_end: number | null
           stripe_customer_id: string | null
           stripe_price_id: string | null
           stripe_subscription_id: string | null
@@ -65,7 +101,7 @@ export interface Database {
           image?: string | null
           isAdmin?: boolean | null
           name?: string | null
-          stripe_current_period_end?: string | null
+          stripe_current_period_end?: number | null
           stripe_customer_id?: string | null
           stripe_price_id?: string | null
           stripe_subscription_id?: string | null
@@ -77,7 +113,7 @@ export interface Database {
           image?: string | null
           isAdmin?: boolean | null
           name?: string | null
-          stripe_current_period_end?: string | null
+          stripe_current_period_end?: number | null
           stripe_customer_id?: string | null
           stripe_price_id?: string | null
           stripe_subscription_id?: string | null

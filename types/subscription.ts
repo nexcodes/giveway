@@ -10,4 +10,6 @@ export type UserSubscriptionPlan = SubscriptionPlan &
   Pick<UserData, "stripe_customer_id" | "stripe_subscription_id"> & {
     stripe_current_period_end: number;
     isPro: boolean;
+    isPremium: boolean;
+    NoPlanActive: boolean;
   };

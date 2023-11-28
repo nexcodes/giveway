@@ -202,7 +202,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
           />
         </div>
         <Button type="submit" disabled={isLoading}>
-          {isLoading && <Spinner />}{" "}
+          {isLoading && <Spinner className="mr-2"/>}
           <span className="ml-2">{Button_update}</span>
         </Button>
       </form>

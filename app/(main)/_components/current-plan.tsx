@@ -13,20 +13,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/misc/spinner";
+import { toast } from "sonner";
 
-interface BillingFormProps extends React.HTMLAttributes<HTMLFormElement> {
+interface CurrentPlanProps extends React.HTMLAttributes<HTMLFormElement> {
   subscriptionPlan: UserSubscriptionPlan & {
     isCanceled: boolean;
   };
 }
 
-export function BillingForm({
+export function CurrentPlan({
   subscriptionPlan,
   className,
   ...props
-}: BillingFormProps) {
+}: CurrentPlanProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   async function onSubmit(event: any) {
@@ -34,14 +34,14 @@ export function BillingForm({
     setIsLoading(!isLoading);
 
     // Get a Stripe session URL.
-    const response = await fetch("/api/stripe/session");
+    const response = await fetch(`${location.origin}/api/stripe/portal`);
+
+    console.log(response)
 
     if (!response?.ok) {
-      return toast({
-        title: "Something went wrong.",
-        description: "Please refresh the page and try again.",
-        variant: "destructive",
-      });
+      return toast.error(
+        "Something went wrong. Please refresh the page and try again."
+      );
     }
 
     // Redirect to the Stripe session.
@@ -65,22 +65,22 @@ export function BillingForm({
         </CardHeader>
         <CardContent>{subscriptionPlan.description}</CardContent>
         <CardFooter className="flex flex-col items-start space-y-2 md:flex-row md:justify-between md:space-x-0">
-          <button
-            type="submit"
-            className={cn(buttonVariants())}
-            disabled={isLoading}
-          >
-            {isLoading && (
-              <Spinner />
-            )}
-            {subscriptionPlan.isPro ? "Manage Subscription" : "Upgrade to PRO"}
-          </button>
-          {subscriptionPlan.isPro ? (
+          {(subscriptionPlan.isPro || subscriptionPlan.isPremium) && (
+            <button
+              type="submit"
+              className={cn(buttonVariants())}
+              disabled={isLoading}
+            >
+              {isLoading && <Spinner className="mr-2" />}
+              Manage Subscription
+            </button>
+          )}
+          {subscriptionPlan.isPro || subscriptionPlan.isPremium ? (
             <p className="rounded-full text-xs font-medium">
               {subscriptionPlan.isCanceled
                 ? "Your plan will be canceled on "
                 : "Your plan renews on "}
-              {formatDate(subscriptionPlan.stripe_current_period_end)}.
+              {formatDate(subscriptionPlan.stripe_current_period_end * 1000)}.
             </p>
           ) : null}
         </CardFooter>

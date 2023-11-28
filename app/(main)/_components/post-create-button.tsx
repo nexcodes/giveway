@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { ButtonProps, buttonVariants } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
-import { Spinner } from "./misc/spinner";
+import { Spinner } from "../../../components/misc/spinner";
 import { Plus } from "lucide-react";
+import { toast } from "sonner";
 
 interface PostCreateButtonProps extends ButtonProps {}
 
@@ -35,19 +35,9 @@ export function PostCreateButton({
     setIsLoading(false);
 
     if (!response?.ok) {
-      if (response.status === 402) {
-        return toast({
-          title: "Limit of 3 posts reached.",
-          description: "Please upgrade to the PRO plan.",
-          variant: "destructive",
-        });
-      }
-
-      return toast({
-        title: "Something went wrong.",
-        description: "Your post was not created. Please try again.",
-        variant: "destructive",
-      });
+      return toast.error(
+        "Something went wrong. Your post was not created. Please try again."
+      );
     }
 
     const post = await response.json();
@@ -71,7 +61,7 @@ export function PostCreateButton({
       disabled={isLoading}
       {...props}
     >
-      {isLoading ? <Spinner /> : <Plus className="mr-2 h-4 w-4" />}
+      {isLoading ? <Spinner className="mr-2" /> : <Plus className="mr-2 h-4 w-4" />}
       New post
     </button>
   );

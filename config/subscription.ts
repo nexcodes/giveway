@@ -1,14 +1,20 @@
 import { SubscriptionPlan } from "@/types/subscription";
 
-export const freePlan: SubscriptionPlan = {
-  name: "Free",
+export const NoPlan: SubscriptionPlan = {
+  name: "No",
   description:
-    "The free plan is limited to 3 posts. Upgrade to the PRO plan for unlimited posts.",
+    "You are not on a plan.",
   stripe_price_id: "",
 };
 
 export const proPlan: SubscriptionPlan = {
   name: "PRO",
-  description: "The PRO plan has unlimited posts.",
+  description: "This is the pro plan",
+  stripe_price_id: process.env.STRIPE_PRO_PLAN_PRICE_ID || "",
+};
+
+export const PremiumPlan: SubscriptionPlan = {
+  name: "Premium",
+  description: "This is the premium plan",
   stripe_price_id: process.env.STRIPE_PREMIUM_PLAN_PRICE_ID || "",
 };

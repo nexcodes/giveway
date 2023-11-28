@@ -13,6 +13,10 @@ import { UserAvatar } from "./user-avatar";
 import React from "react";
 import { UserData } from "@/types/user-data";
 import { LanguagesType } from "@/types/language";
+import { toast } from "sonner";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/types/db";
+import { useRouter } from "next/navigation";
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: UserData | null;
@@ -37,7 +41,23 @@ const content = {
 };
 
 export function UserAccount({ user, language }: UserAccountNavProps) {
-  // const { handleSignOut } = useContext(UserContext);
+  const router = useRouter();
+  const supabase = createClientComponentClient<Database>();
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        throw new Error(error.message);
+      }
+      toast.success("Signed out successfully!");
+      router.refresh();
+    } catch (error) {
+      toast.error("Failed to Sign out!");
+      console.log(error);
+    }
+  };
+
   const { Admin, dashboard, settings, billing, signOut } = content[language];
 
   return (
@@ -78,7 +98,10 @@ export function UserAccount({ user, language }: UserAccountNavProps) {
           <Link href="/dashboard/appearance">{settings}</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" onSelect={() => {}}>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onSelect={() => handleSignOut()}
+        >
           {signOut}
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation";
-
 import { getUser } from "@/actions/supabase-actions";
 import { SidebarNav } from "@/app/(main)/_components/sidebar";
+import { Spinner } from "@/components/misc/spinner";
+import { redirect } from "next/navigation";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -11,17 +11,10 @@ const sidebarNav = [
   {
     title: "Posts",
     href: "/admin",
-    icon: "post",
   },
   {
-    title: "Gifts",
-    href: "/admin/gifts",
-    icon: "billing",
-  },
-  {
-    title: "Settings",
-    href: "/admin/settings",
-    icon: "settings",
+    title: "Prizes",
+    href: "/admin/prizes",
   },
 ];
 
@@ -30,8 +23,16 @@ export default async function DashboardLayout({
 }: DashboardLayoutProps) {
   const user = await getUser();
 
-  if (!user) {
-    redirect("/login");
+  if (user === undefined) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  if (!user?.isAdmin) {
+    redirect("/dashboard");
   }
 
   return (

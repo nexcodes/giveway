@@ -4,9 +4,8 @@ import * as z from "zod";
 
 import { Database } from "@/types/db";
 
-const postCreateSchema = z.object({
+const PrizeCreateSchema = z.object({
   title: z.string(),
-  content: z.string().optional(),
 });
 
 export async function GET() {
@@ -24,7 +23,7 @@ export async function GET() {
 
     const { data: posts } = await supabase
       .from("posts")
-      .select("id, title, published, created_at")
+      .select("*")
       .order("created_at", { ascending: false });
 
     return new Response(JSON.stringify(posts));
@@ -47,18 +46,17 @@ export async function POST(req: Request) {
     }
 
     const json = await req.json();
-    const body = postCreateSchema.parse(json);
+    const body = PrizeCreateSchema.parse(json);
 
-    const { data: post } = await supabase
-      .from("posts")
+    const { data: prize } = await supabase
+      .from("prizes")
       .insert({
         title: body.title,
-        content: body.content,
         author_id: session.user.id,
       })
       .select();
 
-    return new Response(JSON.stringify(post));
+    return new Response(JSON.stringify(prize));
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
