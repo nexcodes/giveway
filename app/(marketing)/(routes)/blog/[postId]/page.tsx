@@ -25,9 +25,7 @@ export async function generateMetadata({
     notFound();
   }
 
-  const url = process.env.NEXT_PUBLIC_APP_URL;
-
-  const ogUrl = new URL(`${url}/api/og`);
+  const ogUrl = new URL(`${siteConfig.url}/api/og`);
   ogUrl.searchParams.set("heading", page.title ?? "untitled");
   ogUrl.searchParams.set("type", siteConfig.name);
   ogUrl.searchParams.set("mode", "light");
