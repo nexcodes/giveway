@@ -48,6 +48,20 @@ export async function getUser() {
       .select("*")
       .eq("email", user.email ?? "")
       .single();
+
+    if (user && !data) {
+      const { data } = await supabase.from("users").insert([
+        {
+          id: user?.id,
+          email: user?.email,
+          name: user?.user_metadata?.name,
+          image: user?.user_metadata?.picture,
+        },
+      ]);
+
+      return data;
+    }
+
     return data;
   } catch (error) {
     console.error("Error:", error);
@@ -69,9 +83,7 @@ export async function getPostForUser(
   return data ? { ...data, content: data.content as unknown as string } : null;
 }
 
-export async function getPrizeForUser(
-  prizeId: Prize["id"],
-) {
+export async function getPrizeForUser(prizeId: Prize["id"]) {
   const supabase = createServerSupabaseClient();
   const { data } = await supabase
     .from("prizes")
