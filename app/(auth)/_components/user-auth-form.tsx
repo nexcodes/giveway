@@ -10,7 +10,6 @@ import { useOrigin } from "@/hooks/use-origin";
 export default function UserAuthForm() {
   const supabase = createClientComponentClient<Database>();
   const ORIGIN = useOrigin();
-  console.log(getURL());
 
   return (
     
