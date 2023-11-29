@@ -33,16 +33,17 @@ export async function generateMetadata({
   ogUrl.searchParams.set("mode", "light");
 
   return {
+    metadataBase: new URL(siteConfig.url),
     title: page.title,
     description: page.description,
     openGraph: {
       title: page.title ?? "untitled",
       description: page.description ?? "",
       type: "article",
-      url: absoluteUrl(page.id),
+      url: absoluteUrl(`/blog/${page.id}`),
       images: [
         {
-          url: ogUrl.toString(),
+          url: page.image || ogUrl.toString(),
           width: 1200,
           height: 630,
           alt: page.title ?? "untitled",
