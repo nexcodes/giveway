@@ -5,16 +5,20 @@ import { Auth } from "@supabase/auth-ui-react";
 
 import { Database } from "@/types/db";
 import { getURL } from "@/lib/utils";
+import { useOrigin } from "@/hooks/use-origin";
 
 export default function UserAuthForm() {
   const supabase = createClientComponentClient<Database>();
+  const ORIGIN = useOrigin();
+  console.log(getURL());
 
   return (
+    
     <div className="flex flex-col space-y-4">
       <Auth
         supabaseClient={supabase}
         providers={["google"]}
-        redirectTo={getURL()}
+        redirectTo={`${ORIGIN}/auth/callback`}
         appearance={{
           className: {
             anchor:
