@@ -4,11 +4,8 @@ import * as z from "zod";
 
 import { Database } from "@/types/db";
 
-const PrizeUpdateSchema = z.object({
-  title: z.string(),
-});
-
-export async function POST(req: Request) {
+export async function PATCH(req: Request) {
+  console.log("running");
   const supabase = createRouteHandlerClient<Database>({
     cookies,
   });
@@ -22,15 +19,21 @@ export async function POST(req: Request) {
     }
 
     const json = await req.json();
-    const body = PrizeUpdateSchema.parse(json);
 
-    const { data: prize } = await supabase
+    const { data: prize, error } = await supabase
       .from("prizes")
       .update({
-        ...body
+        title: json.title,
+        image: json.image,
+        winner: json.winner,
+        time_end: new Date(json.time_end).toISOString(),
+        participants: json.participants,
+        credit_need: parseInt(json.credit_need),
       })
-      .eq("author_id" , session.user.id)
+      .eq("author_id", session.user.id)
       .select();
+
+    console.log(error, "ERROR_");
 
     return new Response(JSON.stringify(prize));
   } catch (error) {

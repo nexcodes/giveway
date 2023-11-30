@@ -23,23 +23,6 @@ interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
   language: LanguagesType;
 }
 
-const content = {
-  English: {
-    Admin: "Admin Panel",
-    dashboard: "Dashboard",
-    settings: "Settings",
-    billing: "Billing",
-    signOut: "Sign out",
-  },
-  French: {
-    Admin: "panneau d'administration",
-    dashboard: "Tableau de bord",
-    settings: "Paramètres",
-    billing: "Facturation",
-    signOut: "Se déconnecter",
-  },
-};
-
 export function UserAccount({ user, language }: UserAccountNavProps) {
   const router = useRouter();
   const supabase = createClientComponentClient<Database>();
@@ -57,8 +40,6 @@ export function UserAccount({ user, language }: UserAccountNavProps) {
       console.log(error);
     }
   };
-
-  const { Admin, dashboard, settings, billing, signOut } = content[language];
 
   return (
     <DropdownMenu>
@@ -80,29 +61,34 @@ export function UserAccount({ user, language }: UserAccountNavProps) {
                 {user?.email}
               </p>
             )}
+            {user?.balance && (
+              <p className="w-[200px] truncate text-sm text-muted-foreground">
+                credit: {user?.balance}
+              </p>
+            )}
           </div>
         </div>
         <DropdownMenuSeparator />
         {user?.isAdmin && (
           <DropdownMenuItem asChild className="cursor-pointer">
-            <Link href="/admin">{Admin}</Link>
+            <Link href="/admin">Admin Panel</Link>
           </DropdownMenuItem>
         )}
         <DropdownMenuItem asChild className="cursor-pointer">
-          <Link href="/dashboard">{dashboard}</Link>
+          <Link href="/dashboard">Dashboard</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className="cursor-pointer">
-          <Link href="/dashboard/billing">{billing}</Link>
+          <Link href="/dashboard/billing">Billing</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className="cursor-pointer">
-          <Link href="/dashboard/appearance">{settings}</Link>
+          <Link href="/dashboard/appearance">Settings</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer"
           onSelect={() => handleSignOut()}
         >
-          {signOut}
+          Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

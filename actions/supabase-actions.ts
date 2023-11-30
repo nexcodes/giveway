@@ -105,6 +105,17 @@ export async function getPublishedPost(postId: Post["id"]) {
   return data ? { ...data, content: data.content as unknown as string } : null;
 }
 
+export async function getPublishedPrize(prizeId: Prize["id"]) {
+  const supabase = createServerSupabaseClient();
+  const { data } = await supabase
+    .from("prizes")
+    .select("*")
+    .eq("id", prizeId)
+    .eq("published", true)
+    .single();
+  return data;
+}
+
 export async function getAllPublishedPost() {
   const supabase = createServerSupabaseClient();
   const { data } = await supabase
@@ -112,6 +123,28 @@ export async function getAllPublishedPost() {
     .select("title, description , image , id , created_at")
     .eq("published", true);
 
+  return data;
+}
+
+export async function getAllPublishedPrize() {
+  const supabase = createServerSupabaseClient();
+  const { data } = await supabase
+    .from("prizes")
+    .select("title , image , id, credit_need , time_end, winner")
+    .order("created_at", { ascending: false })
+    .eq("published", true);
+
+  return data;
+}
+
+export async function getThreePublishedPost() {
+  const supabase = createServerSupabaseClient();
+  const { data } = await supabase
+    .from("posts")
+    .select("title, description , image , id , created_at")
+    .eq("published", true)
+    .order("created_at", { ascending: false })
+    .range(0, 2);
   return data;
 }
 
@@ -136,7 +169,8 @@ export async function UpdateUserSubscription(
   subscription_id: string,
   stripe_current_period_end: number,
   stripe_price_id: string,
-  email: string
+  email: string,
+  balance: number
 ) {
   const supabase = createServerSupabaseClient();
   const { error } = await supabase
@@ -145,10 +179,14 @@ export async function UpdateUserSubscription(
       stripe_subscription_id: subscription_id,
       stripe_current_period_end: stripe_current_period_end,
       stripe_price_id: stripe_price_id,
+      balance,
     })
     .eq("email", email);
 
   if (error) return false;
 
   return true;
+}
+function order(arg0: string, arg1: { ascending: boolean }) {
+  throw new Error("Function not implemented.");
 }

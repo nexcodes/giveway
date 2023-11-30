@@ -8,7 +8,7 @@ import { Spinner } from "../../../components/misc/spinner";
 import { UserAccount } from "./user-account";
 
 import { useLanguageStore } from "@/zustand/language";
-const Navbar = ({user}: any) => {
+const Navbar = ({ user }: any) => {
   const { language } = useLanguageStore();
 
   return (
@@ -25,6 +25,12 @@ const Navbar = ({user}: any) => {
               href="/blog"
             >
               Blog
+            </Link>
+            <Link
+              className="flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm text-foreground/60"
+              href="/prize"
+            >
+              Prizes
             </Link>
           </nav>
           <button className="flex items-center space-x-2 md:hidden">

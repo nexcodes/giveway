@@ -9,4 +9,5 @@ export interface UserData {
   stripe_price_id: string | null;
   stripe_subscription_id: string | null;
   isAdmin?: boolean | null;
+  balance: number | null;
 }

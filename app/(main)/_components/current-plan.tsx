@@ -34,9 +34,9 @@ export function CurrentPlan({
     setIsLoading(!isLoading);
 
     // Get a Stripe session URL.
-    const response = await fetch(`${location.origin}/api/stripe/portal`);
+    const response = await fetch(`/api/stripe/portal`);
 
-    console.log(response)
+    console.log(response);
 
     if (!response?.ok) {
       return toast.error(

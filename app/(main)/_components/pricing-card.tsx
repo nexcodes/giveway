@@ -3,7 +3,6 @@
 import { Spinner } from "@/components/misc/spinner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { UserSubscriptionPlan } from "@/types/subscription";
 import { Check, X } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
@@ -37,7 +36,7 @@ const PricingCard = ({
     setIsLoading(!isLoading);
 
     // Get a Stripe session URL.
-    const response = await fetch(`${location.origin}/api/stripe/portal/${route}`);
+    const response = await fetch(`/api/stripe/portal/${route}`);
 
     if (!response?.ok) {
       setIsLoading(false);

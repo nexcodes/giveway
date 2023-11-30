@@ -58,7 +58,6 @@ const MetaData = ({ post: { id, image, description } }: MetaDataProps) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
-      console.log(reader.result);
       setBase64File(reader.result);
     };
     reader.onerror = function (error) {
@@ -195,7 +194,7 @@ const MetaData = ({ post: { id, image, description } }: MetaDataProps) => {
                   </FormItem>
                 )}
               />
-              <Button className="w-full">
+              <Button type="submit" className="w-full">
                 {isLoading ? <Spinner /> : "Update"}
               </Button>
             </form>

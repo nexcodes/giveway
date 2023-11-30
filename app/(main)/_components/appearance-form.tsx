@@ -33,46 +33,12 @@ const appearanceFormSchema = z.object({
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>;
 
-const content = {
-  English: {
-    lang: "Language",
-    theme_title: "Theme",
-    description_lang: "Choose your language.",
-    description_theme: " Select the theme for the dashboard.",
-    update: "Update preferences",
-    light: "Light",
-    dark: "Dark",
-    system: "System",
-  },
-  French: {
-    lang: "langue",
-    theme_title: "thème",
-    description_lang: "Choisissez votre langue.",
-    description_theme: "Sélectionnez le thème du tableau de bord.",
-    update: "Mettre à jour les préférences",
-    light: "Lumière",
-    dark: "Sombre",
-    system: "Système",
-  },
-};
-
 export function AppearanceForm() {
   const { language, setLanguage } = useLanguageStore();
 
   const { theme, setTheme } = useTheme();
 
   type Theme = "light" | "dark" | "system" | undefined;
-
-  const {
-    lang,
-    theme_title,
-    description_lang,
-    description_theme,
-    update,
-    light,
-    dark,
-    system,
-  } = content[language];
 
   const defaultValues: Partial<AppearanceFormValues> = {
     language,
@@ -105,7 +71,7 @@ export function AppearanceForm() {
           name="language"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{lang}</FormLabel>
+              <FormLabel>Language</FormLabel>
               <div className="relative w-max">
                 <FormControl>
                   <select
@@ -121,7 +87,7 @@ export function AppearanceForm() {
                 </FormControl>
                 <ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 opacity-50" />
               </div>
-              <FormDescription>{description_lang}</FormDescription>
+              <FormDescription>Choose your language.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -131,8 +97,10 @@ export function AppearanceForm() {
           name="theme"
           render={({ field }) => (
             <FormItem className="space-y-1">
-              <FormLabel>{theme_title}</FormLabel>
-              <FormDescription>{description_theme}</FormDescription>
+              <FormLabel>Theme</FormLabel>
+              <FormDescription>
+                Select the theme for the dashboard.
+              </FormDescription>
               <FormMessage />
               <RadioGroup
                 onValueChange={field.onChange}
@@ -161,7 +129,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className="block w-full p-2 text-center font-normal">
-                      {light}
+                      Light
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -187,7 +155,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className="block w-full p-2 text-center font-normal">
-                      {dark}
+                      Dark
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -215,7 +183,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className="block w-full p-2 text-center font-normal">
-                      {system}
+                      System
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -224,7 +192,7 @@ export function AppearanceForm() {
           )}
         />
 
-        <Button type="submit">{update}</Button>
+        <Button type="submit">Update preferences</Button>
       </form>
     </Form>
   );

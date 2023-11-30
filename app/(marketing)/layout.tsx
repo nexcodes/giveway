@@ -1,6 +1,5 @@
-import { getUser } from "@/actions/supabase-actions";
 import Navbar from "./_components/navbar";
-import { Spinner } from "@/components/misc/spinner";
+import { getUser } from "@/actions/supabase-actions";
 
 export default async function MainLayout({
   children,

@@ -3,10 +3,8 @@ import { redirect } from "next/navigation";
 import { getUser } from "@/actions/supabase-actions";
 import PageContent from "./pageContent";
 
-
 export default async function SettingsProfilePage() {
-  const user = await getUser()
-  
+  const user = await getUser();
 
   if (user === undefined)
     return (
@@ -17,7 +15,5 @@ export default async function SettingsProfilePage() {
 
   if (user === null) redirect("/login");
 
-  return (
-    <PageContent user={user} />
-  );
+  return <PageContent user={user} />;
 }

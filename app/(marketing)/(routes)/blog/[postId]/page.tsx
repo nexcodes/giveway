@@ -51,7 +51,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function EditorPage({ params }: EditorPageProps) {
+export default async function BlogPage({ params }: EditorPageProps) {
   const post = await getPublishedPost(params.postId);
 
   if (!post) {

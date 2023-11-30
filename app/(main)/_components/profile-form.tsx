@@ -23,7 +23,6 @@ import { Spinner } from "@/components/misc/spinner";
 import { UserData } from "@/types/user-data";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/types/db";
-import { useLanguageStore } from "@/zustand/language";
 
 const profileFormSchema = z.object({
   username: z
@@ -47,33 +46,14 @@ interface ProfileFormProps {
   user: UserData;
 }
 
-const content = {
-  English: {
-    Label_name: "Username",
-    Label_email: "Email",
-    Label_avatar: "Change",
-    Button_update: "Update profile",
-  },
-  French: {
-    Label_name: "Nom d'utilisateur",
-    Label_email: "Email",
-    Label_avatar: "Changer",
-    Button_update: "Mettre à jour le profil",
-  },
-};
-
 export function ProfileForm({ user }: ProfileFormProps) {
   const supabase = createClientComponentClient<Database>();
-  const { language } = useLanguageStore();
 
   const [file, setFile] = useState<File | null>();
   const [base64File, setBase64File] = useState<string | ArrayBuffer | null>();
   const [isLoading, setIsLoading] = useState(false);
 
   const { edgestore } = useEdgeStore();
-
-  const { Label_name, Label_email, Label_avatar, Button_update } =
-    content[language];
 
   const defaultValues: Partial<ProfileFormValues> = {
     username: user?.name ?? "",
@@ -148,7 +128,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{Label_name}</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input
                   placeholder="David Mason"
@@ -165,7 +145,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{Label_email}</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input placeholder="example@gmail.com" {...field} disabled />
               </FormControl>
@@ -184,7 +164,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
             htmlFor="Avatar"
             className="cursor-pointer hover:text-muted-foreground transition"
           >
-            {Label_avatar}
+            change
           </Label>
           <input
             id="Avatar"
@@ -202,8 +182,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
           />
         </div>
         <Button type="submit" disabled={isLoading}>
-          {isLoading && <Spinner className="mr-2"/>}
-          <span className="ml-2">{Button_update}</span>
+          {isLoading ? <Spinner className="mr-2" /> : "Update"}
         </Button>
       </form>
     </Form>

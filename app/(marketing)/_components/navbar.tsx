@@ -7,32 +7,13 @@ import Link from "next/link";
 import { Spinner } from "@/components/misc/spinner";
 import LanguageSwitch from "./language-switch";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useLanguageStore } from "@/zustand/language";
 import { UserData } from "@/types/user-data";
-
-const content = {
-  English: {
-    SignIn: "Sign In",
-    Dashboard: "Dashboard",
-    Blog: "Blog",
-    Pricing: "Pricing",
-  },
-  French: {
-    SignIn: "Se connecter",
-    Dashboard: "Tableau de bord",
-    Blog: "Blog",
-    Pricing: "Tarifs",
-  },
-};
 
 interface NavbarProps {
   user: UserData | null;
 }
 
 const Navbar = ({ user }: NavbarProps) => {
-  const { language } = useLanguageStore();
-
-  const { SignIn, Dashboard, Blog, Pricing } = content[language];
   return (
     <header className="container px-4 sm:px-8 z-40 bg-background">
       <div className="flex h-20 items-center justify-between py-6">
@@ -46,13 +27,19 @@ const Navbar = ({ user }: NavbarProps) => {
               className="flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm text-foreground/60"
               href="/pricing"
             >
-              {Pricing}
+              Pricing
             </Link>
             <Link
               className="flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm text-foreground/60"
               href="/blog"
             >
-              {Blog}
+              Blog
+            </Link>
+            <Link
+              className="flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm text-foreground/60"
+              href="/prize"
+            >
+              Prizes
             </Link>
           </nav>
           <button className="flex items-center space-x-2 md:hidden">
@@ -69,14 +56,14 @@ const Navbar = ({ user }: NavbarProps) => {
                 href={"/dashboard"}
                 className={buttonVariants({ variant: "ghost" })}
               >
-                {Dashboard}
+                Dashboard
               </Link>
             ) : (
               <Link
                 href={"/login"}
                 className={buttonVariants({ variant: "outline" })}
               >
-                {SignIn}
+                Sign In
               </Link>
             )}
           </nav>

@@ -1,10 +1,9 @@
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import { stripe } from "@/lib/stripe";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
-import { getUser } from "@/actions/supabase-actions";
+import { createStripeCustomerId, getUser } from "@/actions/supabase-actions";
 import { CurrentPlan } from "@/app/(main)/_components/current-plan";
-import { createStripeAccount } from "@/actions/create-stripe-account";
 import PricingCard from "@/app/(main)/_components/pricing-card";
 import { StripeSuccess } from "@/actions/stripe-success";
 
@@ -55,18 +54,29 @@ export default async function BillingPage(props: Props) {
   }
 
   if (!user.stripe_customer_id) {
-    await createStripeAccount({
-      user: {
+    const response = await fetch(`/api/stripe/createAccount`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         email: user.email,
         name: user.name,
-      },
+      }),
     });
+
+    const data = await response.json();
+
+    const stripe_customer_id = data.id;
+
+    await createStripeCustomerId(stripe_customer_id, user.email ?? "");
   }
 
   if (searchParams.success && searchParams.session_id) {
     const session_id = searchParams.session_id;
     if (session_id) {
       StripeSuccess(session_id as string);
+      redirect("/dashboard/billing");
     }
   }
 
