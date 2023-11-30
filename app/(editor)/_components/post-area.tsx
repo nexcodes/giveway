@@ -6,10 +6,13 @@ import dynamic from "next/dynamic";
 import { Post } from "@/types/post";
 import TextareaAutosize from "react-textarea-autosize";
 
-import Buttons from "./buttons";
+import Buttons from "./post-buttons";
 
 interface EditorProps {
-  post: Pick< Post, "id" | "title" | "description" | "published" | "image" | "content">;
+  post: Pick<
+    Post,
+    "id" | "title" | "description" | "published" | "image" | "content"
+  >;
 }
 
 export function PostArea({ post }: EditorProps) {

@@ -22,9 +22,19 @@ import { toast } from "sonner";
 import { useEdgeStore } from "@/lib/edgestore";
 import { UploadCloudIcon } from "lucide-react";
 import Image from "next/image";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
   title: z.string(),
+  description: z.string(),
+  category: z.string(),
+  prize_value: z.string(),
   credit_need: z.string(),
   winner: z.string(),
   time_end: z.string(),
@@ -43,6 +53,9 @@ export default function PrizeForm({ prize }: PrizeFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: prize.title ?? "",
+      description: prize.description ?? "",
+      category: prize.category ?? "",
+      prize_value: prize.prize_value?.toString() ?? "",
       credit_need: prize.credit_need?.toString() ?? "",
       winner: prize.winner ?? "",
       time_end: prize.time_end?.toString() ?? "",
@@ -87,7 +100,7 @@ export default function PrizeForm({ prize }: PrizeFormProps) {
 
         if (!response?.ok) {
           return toast.error(
-            "Something went wrong. Your post was not saved. Please try again."
+            "Something went wrong. Your prize was not saved. Please try again."
           );
         }
       }
@@ -104,10 +117,12 @@ export default function PrizeForm({ prize }: PrizeFormProps) {
         });
         if (!response?.ok) {
           return toast.error(
-            "Something went wrong. Your post was not saved. Please try again."
+            "Something went wrong. Your prize was not saved. Please try again."
           );
         }
       }
+
+      toast.success("Your prize has been saved.");
     } catch (error) {
       console.error(error, "PRIZE_FORM_ERROR");
     } finally {
@@ -129,6 +144,22 @@ export default function PrizeForm({ prize }: PrizeFormProps) {
               </FormControl>
               <FormDescription>
                 This will be the title of the prize.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Input placeholder="write a description..." {...field} />
+              </FormControl>
+              <FormDescription>
+                This will be the description of the prize.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -178,6 +209,56 @@ export default function PrizeForm({ prize }: PrizeFormProps) {
             </label>
           </div>
         </div>
+
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a Category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Gift Card">Gift Card</SelectItem>
+                    <SelectItem value="Phone">Phone</SelectItem>
+                    <SelectItem value="Cooking">Cooking</SelectItem>
+                    <SelectItem value="Gaming">Gaming</SelectItem>
+                    <SelectItem value="Travel">Travel</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormDescription>
+                This will be the value of the prize.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="prize_value"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Prize Value</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="Prize Value..." {...field} />
+              </FormControl>
+              <FormDescription>
+                This will be the value of the prize in $.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}

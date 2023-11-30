@@ -3,41 +3,12 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import * as z from "zod";
 
 import { Database } from "@/types/db";
-import { postPatchSchema } from "@/lib/validations/post";
 
 const routeContextSchema = z.object({
   params: z.object({
-    postId: z.string(),
+    prizeId: z.string(),
   }),
 });
-
-export async function DELETE(
-  req: Request,
-  context: z.infer<typeof routeContextSchema>
-) {
-  const supabase = createRouteHandlerClient<Database>({
-    cookies: () => cookies(),
-  });
-  try {
-    // Validate the route params.
-    const { params } = routeContextSchema.parse(context);
-
-    // Check if the user has access to this post.
-    if (!(await verifyCurrentUserHasAccessToPost(params.postId))) {
-      return new Response(null, { status: 403 });
-    }
-    // Delete the post.
-    await supabase.from("posts").delete().eq("id", params.postId);
-
-    return new Response(null, { status: 204 });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    }
-
-    return new Response(null, { status: 500 });
-  }
-}
 
 export async function PATCH(
   req: Request,
@@ -50,23 +21,21 @@ export async function PATCH(
     // Validate route params.
     const { params } = routeContextSchema.parse(context);
 
-    // Check if the user has access to this post.
-    if (!(await verifyCurrentUserHasAccessToPost(params.postId))) {
+    // Check if the user has access to this prize.
+    if (!(await verifyCurrentUserHasAccessToPost(params.prizeId))) {
       return new Response(null, { status: 403 });
     }
 
     // Get the request body and validate it.
     const json = await req.json();
-    const body = postPatchSchema.parse(json);
 
-    // Update the post.
+    // Update the prize.
     await supabase
-      .from("posts")
+      .from("prizes")
       .update({
-        title: body.title,
-        content: body.content,
+        published: json.published,
       })
-      .eq("id", params.postId)
+      .eq("id", params.prizeId)
       .select();
 
     return new Response(null, { status: 200 });

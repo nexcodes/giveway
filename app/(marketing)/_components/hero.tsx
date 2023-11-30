@@ -15,17 +15,17 @@ const Hero = () => {
         <h1
           className={cn(
             myFont.className,
-            "font-bold text-3xl sm:text-5xl md:text-6xl lg:text-7xl"
+            "font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
           )}
         >
           Experience Winning Thrills on Our Giveaway Platform!
         </h1>
-        <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
+        <p className="max-w-[42rem] leading-normal text-muted-foreground text-base sm:text-xl sm:leading-8">
           Explore a world full of fun and chances by trying your luck on our
           easy-to-use and secure online giveaway platform.
         </p>
-        <div className="space-x-4">
-          <Link className={buttonVariants({ className: "px-8" })} href="/login">
+        <div className="space-y-4 sm:space-y-0 sm:space-x-4 max-w-sm sm:max-w-none">
+          <Link className={buttonVariants({ className: "px-8 w-full sm:w-auto" })} href="/login">
             Get Started
           </Link>
           <Link
@@ -33,7 +33,7 @@ const Hero = () => {
             rel="noreferrer"
             className={buttonVariants({
               variant: "outline",
-              className: "px-8 py-5",
+              className: "px-8 py-5 w-full sm:w-auto",
             })}
             href="/pricing"
           >

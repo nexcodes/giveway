@@ -1,35 +1,44 @@
-import { getPrizeForUser, getUser } from "@/actions/supabase-actions"
-import { notFound, redirect } from "next/navigation"
-import PrizeForm from "../../_components/prize-form"
-import { Spinner } from "@/components/misc/spinner"
+import { getPrizeForUser, getUser } from "@/actions/supabase-actions";
+import { notFound, redirect } from "next/navigation";
+import PrizeForm from "../../_components/prize-form";
+import { Spinner } from "@/components/misc/spinner";
+import Buttons from "../../_components/prize-buttons";
 
 interface PrizePageProps {
-    params: { prizeId: string }
-  }
+  params: { prizeId: string };
+}
 
 export default async function PrizePage({ params }: PrizePageProps) {
-    const user = await getUser()
+  const user = await getUser();
 
   if (!user) {
-    redirect("/login")
+    redirect("/login");
   }
 
-  const prize = await getPrizeForUser(params.prizeId)
+  const prize = await getPrizeForUser(params.prizeId);
 
-  if(prize === undefined) {
+  if (prize === undefined) {
     return (
       <div className="flex items-center justify-center h-full">
         <Spinner size={"lg"} />
       </div>
-    )
+    );
   }
 
   if (!prize) {
-    notFound()
+    notFound();
   }
-    return (
-        <div className="max-w-3xl mx-auto py-8 px-4">
-            <PrizeForm prize={prize} />
-        </div>
-    )
+  return (
+    <div className="container py-4">
+      <Buttons
+        prize={{
+          id: prize.id,
+          published: prize.published,
+        }}
+      />
+      <div className="max-w-3xl mx-auto py-8 px-4">
+        <PrizeForm prize={prize} />
+      </div>
+    </div>
+  );
 }

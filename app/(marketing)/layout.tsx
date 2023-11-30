@@ -1,4 +1,4 @@
-import Navbar from "./_components/navbar";
+import Navbar from "../../components/main-nav";
 import { getUser } from "@/actions/supabase-actions";
 
 export default async function MainLayout({
@@ -8,10 +8,25 @@ export default async function MainLayout({
 }) {
   const user = await getUser();
 
+  const items =  [
+    {
+      title: "Pricing",
+      href: "/pricing",
+    },
+    {
+      title: "Blog",
+      href: "/blog",
+    },
+    {
+      title: "Prizes",
+      href: "/prize",
+    },
+  ]
+
   return (
     <main>
       <>
-        <Navbar user={user} />
+        <Navbar items={items} user={user} />
         {children}
       </>
     </main>

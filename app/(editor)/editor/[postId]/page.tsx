@@ -1,23 +1,23 @@
-import { notFound, redirect } from "next/navigation"
+import { notFound, redirect } from "next/navigation";
 
-import { PostArea } from "../../_components/post-area"
-import { getPostForUser, getUser } from "@/actions/supabase-actions"
+import { PostArea } from "../../_components/post-area";
+import { getPostForUser, getUser } from "@/actions/supabase-actions";
 
 interface EditorPageProps {
-  params: { postId: string }
+  params: { postId: string };
 }
 
 export default async function EditorPage({ params }: EditorPageProps) {
-  const user = await getUser()
+  const user = await getUser();
 
   if (!user) {
-    redirect("/login")
+    redirect("/login");
   }
 
-  const post = await getPostForUser(params.postId, user.id)
+  const post = await getPostForUser(params.postId, user.id);
 
   if (!post) {
-    notFound()
+    notFound();
   }
 
   return (
@@ -28,8 +28,8 @@ export default async function EditorPage({ params }: EditorPageProps) {
         content: post.content,
         published: post.published,
         description: post.description,
-        image: post.image
+        image: post.image,
       }}
     />
-  )
+  );
 }

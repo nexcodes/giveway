@@ -6,7 +6,6 @@ import { createStripeCustomerId, getUser } from "@/actions/supabase-actions";
 import { CurrentPlan } from "@/app/(main)/_components/current-plan";
 import PricingCard from "@/app/(main)/_components/pricing-card";
 import { StripeSuccess } from "@/actions/stripe-success";
-import { siteConfig } from "@/config/site";
 
 export const metadata = {
   title: "Billing",

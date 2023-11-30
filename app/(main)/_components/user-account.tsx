@@ -12,7 +12,6 @@ import {
 import { UserAvatar } from "./user-avatar";
 import React from "react";
 import { UserData } from "@/types/user-data";
-import { LanguagesType } from "@/types/language";
 import { toast } from "sonner";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/types/db";
@@ -20,10 +19,9 @@ import { useRouter } from "next/navigation";
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: UserData | null;
-  language: LanguagesType;
 }
 
-export function UserAccount({ user, language }: UserAccountNavProps) {
+export function UserAccount({ user }: UserAccountNavProps) {
   const router = useRouter();
   const supabase = createClientComponentClient<Database>();
 
@@ -71,7 +69,7 @@ export function UserAccount({ user, language }: UserAccountNavProps) {
         <DropdownMenuSeparator />
         {user?.isAdmin && (
           <DropdownMenuItem asChild className="cursor-pointer">
-            <Link href="/admin">Admin Panel</Link>
+            <Link href="/admin">Admin Dashboard</Link>
           </DropdownMenuItem>
         )}
         <DropdownMenuItem asChild className="cursor-pointer">
