@@ -3,6 +3,7 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import * as z from "zod";
 
 import { Database } from "@/types/db";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 const postCreateSchema = z.object({
   title: z.string(),
@@ -10,8 +11,20 @@ const postCreateSchema = z.object({
 });
 
 export async function GET() {
+
+  async function getCookie() {
+    const cookie = cookies()
+    return new Promise<ReadonlyRequestCookies>((resolve) =>
+      setTimeout(() => {
+        resolve(cookie)
+      }, 1000)
+    )
+  }
+
+  const cookie = await getCookie()
+
   const supabase = createRouteHandlerClient<Database>({
-    cookies: () => cookies()
+    cookies: () => cookie
   });
   try {
     const {

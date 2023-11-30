@@ -20,7 +20,7 @@ const BlogHome = ({ posts }: BlogHomeProps) => {
   }
 
   return (
-    <section className="container space-y-6 bg-slate-50 py-8 dark:bg-transparent md:py-12 lg:py-24">
+    <section className="container space-y-6 py-8 dark:bg-transparent md:py-12 lg:py-24">
       <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
         <h2
           className={cn(
