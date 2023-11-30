@@ -7,12 +7,23 @@ import { PremiumPlan } from "@/config/subscription";
 import { stripe } from "@/lib/stripe";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { absoluteUrl } from "@/lib/utils";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 const billingUrl = absoluteUrl("/dashboard/billing");
 
+async function getCookie() {
+  const cookie = cookies();
+  return new Promise<ReadonlyRequestCookies>((resolve) =>
+    setTimeout(() => {
+      resolve(cookie);
+    }, 1000)
+  );
+}
+
 export async function GET(req: Request) {
+  const cookie = await getCookie();
   const supabase = createRouteHandlerClient<Database>({
-    
+    cookies: () => cookie,
   });
 
   try {
@@ -27,7 +38,6 @@ export async function GET(req: Request) {
     const subscriptionPlan = await getUserSubscriptionPlan(session.user.id);
 
     if (!subscriptionPlan.NoPlanActive && subscriptionPlan.stripe_customer_id) {
-
       return new Response(JSON.stringify({ error: "Already on a plan" }));
     }
 
@@ -50,8 +60,6 @@ export async function GET(req: Request) {
         userId: session.user.id,
       },
     });
-
-
 
     return new Response(JSON.stringify({ url: stripeSession.url }));
   } catch (error) {

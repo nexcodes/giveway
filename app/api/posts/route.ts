@@ -10,21 +10,20 @@ const postCreateSchema = z.object({
   content: z.string().optional(),
 });
 
+async function getCookie() {
+  const cookie = cookies();
+  return new Promise<ReadonlyRequestCookies>((resolve) =>
+    setTimeout(() => {
+      resolve(cookie);
+    }, 1000)
+  );
+}
+
 export async function GET() {
-
-  async function getCookie() {
-    const cookie = cookies()
-    return new Promise<ReadonlyRequestCookies>((resolve) =>
-      setTimeout(() => {
-        resolve(cookie)
-      }, 1000)
-    )
-  }
-
-  const cookie = await getCookie()
+  const cookie = await getCookie();
 
   const supabase = createRouteHandlerClient<Database>({
-    cookies: () => cookie
+    cookies: () => cookie,
   });
   try {
     const {
@@ -47,8 +46,10 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const cookie = await getCookie();
+
   const supabase = createRouteHandlerClient<Database>({
-    
+    cookies: () => cookie,
   });
   try {
     const {

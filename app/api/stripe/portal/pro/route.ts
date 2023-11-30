@@ -7,12 +7,23 @@ import { proPlan } from "@/config/subscription";
 import { stripe } from "@/lib/stripe";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { absoluteUrl } from "@/lib/utils";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 const billingUrl = absoluteUrl("/dashboard/billing");
 
+async function getCookie() {
+  const cookie = cookies();
+  return new Promise<ReadonlyRequestCookies>((resolve) =>
+    setTimeout(() => {
+      resolve(cookie);
+    }, 1000)
+  );
+}
+
 export async function GET(req: Request) {
+  const cookie = await getCookie();
   const supabase = createRouteHandlerClient<Database>({
-    
+    cookies: () => cookie,
   });
 
   try {

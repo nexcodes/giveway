@@ -3,6 +3,7 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import * as z from "zod";
 
 import { Database } from "@/types/db";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -10,12 +11,22 @@ const routeContextSchema = z.object({
   }),
 });
 
+async function getCookie() {
+  const cookie = cookies();
+  return new Promise<ReadonlyRequestCookies>((resolve) =>
+    setTimeout(() => {
+      resolve(cookie);
+    }, 1000)
+  );
+}
+
 export async function PATCH(
   req: Request,
   context: z.infer<typeof routeContextSchema>
 ) {
+  const cookie = await getCookie();
   const supabase = createRouteHandlerClient<Database>({
-    
+    cookies: () => cookie,
   });
   try {
     // Validate route params.
@@ -50,8 +61,10 @@ export async function PATCH(
 }
 
 async function verifyCurrentUserHasAccessToPost(postId: string) {
+  const cookie = await getCookie();
+
   const supabase = createRouteHandlerClient<Database>({
-    
+    cookies: () => cookie,
   });
   const {
     data: { session },

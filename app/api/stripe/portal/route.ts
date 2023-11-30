@@ -3,16 +3,27 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { z } from "zod";
 
 import { Database } from "@/types/db";
-import { proPlan, PremiumPlan } from "@/config/subscription";
+import { proPlan } from "@/config/subscription";
 import { stripe } from "@/lib/stripe";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { absoluteUrl } from "@/lib/utils";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 const billingUrl = absoluteUrl("/dashboard/billing");
 
+async function getCookie() {
+  const cookie = cookies();
+  return new Promise<ReadonlyRequestCookies>((resolve) =>
+    setTimeout(() => {
+      resolve(cookie);
+    }, 1000)
+  );
+}
+
 export async function GET(req: Request) {
+  const cookie = await getCookie();
   const supabase = createRouteHandlerClient<Database>({
-    
+    cookies: () => cookie,
   });
 
   try {
@@ -35,28 +46,6 @@ export async function GET(req: Request) {
       });
       return new Response(JSON.stringify({ url: stripeSession.url }));
     }
-
-    const lineItem = {
-      price: proPlan.stripe_price_id,
-      quantity: 1,
-    };
-
-    // The user is on the free plan.
-    // Create a checkout session to upgrade.
-    const stripeSession = await stripe.checkout.sessions.create({
-      success_url: billingUrl,
-      cancel_url: billingUrl,
-      payment_method_types: ["card"],
-      mode: "subscription",
-      billing_address_collection: "auto",
-      customer_email: session.user.email,
-      line_items: [lineItem],
-      metadata: {
-        userId: session.user.id,
-      },
-    });
-
-    return new Response(JSON.stringify({ url: stripeSession.url }));
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
