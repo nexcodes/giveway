@@ -12,7 +12,7 @@ const billingUrl = absoluteUrl("/dashboard/billing");
 
 export async function GET(req: Request) {
   const supabase = createRouteHandlerClient<Database>({
-    cookies,
+    cookies: () => cookies()
   });
 
   try {

@@ -15,7 +15,7 @@ export async function PATCH(
   context: z.infer<typeof routeContextSchema>
 ) {
   const supabase = createRouteHandlerClient<Database>({
-    cookies,
+    cookies: () => cookies()
   });
   try {
     // Validate route params.
@@ -49,7 +49,7 @@ export async function PATCH(
 
 async function verifyCurrentUserHasAccessToPost(postId: string) {
   const supabase = createRouteHandlerClient<Database>({
-    cookies,
+    cookies: () => cookies()
   });
   const {
     data: { session },
