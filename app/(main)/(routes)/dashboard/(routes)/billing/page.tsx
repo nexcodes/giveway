@@ -6,6 +6,7 @@ import { createStripeCustomerId, getUser } from "@/actions/supabase-actions";
 import { CurrentPlan } from "@/app/(main)/_components/current-plan";
 import PricingCard from "@/app/(main)/_components/pricing-card";
 import { StripeSuccess } from "@/actions/stripe-success";
+import { siteConfig } from "@/config/site";
 
 export const metadata = {
   title: "Billing",
@@ -54,20 +55,12 @@ export default async function BillingPage(props: Props) {
   }
 
   if (!user.stripe_customer_id) {
-    const response = await fetch(`/api/stripe/createAccount`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: user.email,
-        name: user.name,
-      }),
+    const customer = await stripe.customers.create({
+      email: user.email ?? "",
+      name: user.name ?? "",
     });
 
-    const data = await response.json();
-
-    const stripe_customer_id = data.id;
+    const stripe_customer_id = customer.id;
 
     await createStripeCustomerId(stripe_customer_id, user.email ?? "");
   }
