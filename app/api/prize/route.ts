@@ -10,7 +10,7 @@ const PrizeCreateSchema = z.object({
 
 export async function GET() {
   const supabase = createRouteHandlerClient<Database>({
-    cookies: () => cookies()
+    
   });
   try {
     const {
@@ -34,7 +34,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const supabase = createRouteHandlerClient<Database>({
-    cookies: () => cookies()
+    
   });
   try {
     const {

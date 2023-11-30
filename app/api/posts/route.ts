@@ -48,7 +48,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const supabase = createRouteHandlerClient<Database>({
-    cookies: () => cookies()
+    
   });
   try {
     const {
