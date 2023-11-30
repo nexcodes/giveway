@@ -3,27 +3,16 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { z } from "zod";
 
 import { Database } from "@/types/db";
-import { proPlan } from "@/config/subscription";
 import { stripe } from "@/lib/stripe";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { absoluteUrl } from "@/lib/utils";
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 const billingUrl = absoluteUrl("/dashboard/billing");
 
-async function getCookie() {
-  const cookie = cookies();
-  return new Promise<ReadonlyRequestCookies>((resolve) =>
-    setTimeout(() => {
-      resolve(cookie);
-    }, 1000)
-  );
-}
-
-export async function GET(req: Request) {
-  const cookie = await getCookie();
+export async function GET() {
+  const cookieStore = cookies();
   const supabase = createRouteHandlerClient<Database>({
-    cookies: () => cookie,
+    cookies: () => cookieStore,
   });
 
   try {
@@ -46,6 +35,8 @@ export async function GET(req: Request) {
       });
       return new Response(JSON.stringify({ url: stripeSession.url }));
     }
+
+    return new Response(JSON.stringify({ url: "" }));
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
