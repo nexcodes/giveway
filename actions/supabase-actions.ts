@@ -187,6 +187,3 @@ export async function UpdateUserSubscription(
 
   return true;
 }
-function order(arg0: string, arg1: { ascending: boolean }) {
-  throw new Error("Function not implemented.");
-}

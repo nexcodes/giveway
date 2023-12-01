@@ -38,14 +38,7 @@ const pricing_2 = {
   ],
 };
 
-// type Props = {
-//   params: {};
-//   searchParams: { [key: string]: string | string[] | undefined };
-// };
-
 export default async function BillingPage() {
-  // const searchParams = props.searchParams;
-
   const user = await getUser();
 
   if (!user) {
@@ -62,14 +55,6 @@ export default async function BillingPage() {
 
     await createStripeCustomerId(stripe_customer_id, user.email ?? "");
   }
-
-  // if (searchParams.success && searchParams.session_id) {
-  //   const session_id = searchParams.session_id;
-  //   if (session_id) {
-  //     StripeSuccess(session_id as string);
-  //     redirect("/dashboard/billing");
-  //   }
-  // }
 
   const subscriptionPlan = await getUserSubscriptionPlan(user.id);
 
