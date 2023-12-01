@@ -4,7 +4,6 @@ import NoPrize from "@/app/(main)/_components/no-prize";
 import PrizeCard from "@/app/(main)/_components/prize-card";
 
 export default async function Dashboard() {
-
   const supabase = createServerSupabaseClient();
 
   const { data: prize } = await supabase
@@ -26,7 +25,14 @@ export default async function Dashboard() {
       {prize?.length ? (
         <div className="divide-y divide-border rounded-md border">
           {prize.map((prize) => (
-            <PrizeCard key={prize.id} prize={prize} />
+            <PrizeCard
+              key={prize.id}
+              prize={{
+                id: prize.id,
+                title: prize.title,
+                created_at: prize.created_at,
+              }}
+            />
           ))}
         </div>
       ) : (

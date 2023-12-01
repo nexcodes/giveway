@@ -5,7 +5,7 @@ import { PostOperations } from "./post-operations";
 import { Prize } from "@/types/prize";
 
 interface PrizeCardProps {
-    prize: Prize;
+  prize: Pick<Prize, "id" | "title" | "created_at">;
 }
 
 const PrizeCard = ({ prize }: PrizeCardProps) => {
@@ -26,7 +26,7 @@ const PrizeCard = ({ prize }: PrizeCardProps) => {
               </p>
             </div>
           </div>
-         <PostOperations post={{ id: prize.id, title: prize.title }} />
+          <PostOperations post={{ id: prize.id, title: prize.title }} />
         </div>
       </div>
     </div>
