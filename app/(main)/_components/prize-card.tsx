@@ -2,9 +2,10 @@ import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
 import { PostOperations } from "./post-operations";
+import { Prize } from "@/types/prize";
 
 interface PrizeCardProps {
-    prize: any;
+    prize: Prize;
 }
 
 const PrizeCard = ({ prize }: PrizeCardProps) => {

@@ -5,6 +5,10 @@ import * as z from "zod";
 import { Database } from "@/types/db";
 import { getUser } from "@/actions/supabase-actions";
 
+function removeDuplicates(arr: string[]) {
+  return Array.from(new Set(arr));
+}
+
 export async function PATCH(req: Request) {
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient<Database>({
@@ -16,6 +20,17 @@ export async function PATCH(req: Request) {
     const json = await req.json();
 
     const isEligible = (user?.balance ?? 0) > json.credit;
+
+    if (!isEligible) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Not enough credits" })
+      );
+    }
+
+    const participations = removeDuplicates([
+      ...(user?.participations ?? []),
+      json.prizeId,
+    ]);
 
     if (isEligible) {
       await supabase
@@ -29,6 +44,7 @@ export async function PATCH(req: Request) {
       await supabase
         .from("users")
         .update({
+          participations: participations,
           balance: (user?.balance ?? 0) - json.credit,
         })
         .eq("email", user?.email ?? "")

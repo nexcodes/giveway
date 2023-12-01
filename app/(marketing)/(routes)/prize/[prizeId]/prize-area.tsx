@@ -8,22 +8,33 @@ import { UserData } from "@/types/user-data";
 import Link from "next/link";
 import { Spinner } from "@/components/misc/spinner";
 import { toast } from "sonner";
-
+import { useRouter } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
 interface PrizeAreaProps {
   prize: Prize;
   user: UserData | null;
 }
 
 const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
+  const router = useRouter();
   const [sliderValue, setSliderValue] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [winningChance, setWinningChance] = useState<number>();
+
+  useEffect(() => {
+    const participants = [...(prize.participants ?? [])];
+    const totalWeight = participants.reduce((sum, obj) => sum + obj.weight, 0);
+    const specificObject = participants.find(
+      (obj) => obj.email === user?.email
+    );
+
+    if (specificObject) {
+      const winningChance = (specificObject.weight / totalWeight) * 100;
+      setWinningChance(winningChance);
+    }
+  }, [prize, user]);
 
   const endTime = prize.time_end ? new Date(prize.time_end) : null;
-  // if (prize.participants) {
-  //   const emailExists = prize.participants.find(
-  //     (participant) => (participant?.email) === user?.email
-  //   );
-  // }
 
   const [time, setTime] = useState(endTime);
   const [remainingTime, setRemainingTime] = useState(
@@ -44,13 +55,20 @@ const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
         return;
       }
 
-      const participants = [
-        ...(prize.participants ?? []),
-        {
-          email: user?.email,
+      const participants = [...(prize.participants ?? [])];
+      const index = participants.findIndex(
+        (item) => item.email === user?.email
+      );
+      if (index !== -1) {
+        // Email exists in the array
+        participants[index].weight += sliderValue;
+      } else {
+        // Email doesn't exist in the array
+        participants.push({
+          email: user?.email ?? "",
           weight: sliderValue,
-        },
-      ];
+        });
+      }
 
       await fetch("/api/prize/addParticipant", {
         method: "PATCH",
@@ -65,6 +83,7 @@ const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
       });
 
       toast.success("You have successfully participated in this prize");
+      router.refresh();
     } catch (error) {
       toast.error("Something went wrong");
       console.log(error);
@@ -178,6 +197,17 @@ const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
           <p className="mt-2 leading-normal text-muted-foreground text-xs sm:text-sm">
             credit required: {(prize.credit_need ?? 0) * sliderValue}
           </p>
+          {winningChance && (
+            <>
+              <Separator />
+              <div className="border-2 border-neutral-199 rounded px-2 py-4 flex flex-col items-center justify-center space-y-1">
+                <p className="font-bold text-lg text-primary">
+                  {winningChance}%
+                </p>
+                <p className="font-medium text-sm">your chance you winning</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>

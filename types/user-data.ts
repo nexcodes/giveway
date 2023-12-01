@@ -10,4 +10,5 @@ export interface UserData {
   stripe_subscription_id: string | null;
   isAdmin?: boolean | null;
   balance: number | null;
+  participations: string[] | null;
 }

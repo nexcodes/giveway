@@ -102,6 +102,7 @@ export interface Database {
           image: string | null
           isAdmin: boolean | null
           name: string | null
+          participations: string[] | null
           stripe_current_period_end: number | null
           stripe_customer_id: string | null
           stripe_price_id: string | null
@@ -115,6 +116,7 @@ export interface Database {
           image?: string | null
           isAdmin?: boolean | null
           name?: string | null
+          participations?: string[] | null
           stripe_current_period_end?: number | null
           stripe_customer_id?: string | null
           stripe_price_id?: string | null
@@ -128,6 +130,7 @@ export interface Database {
           image?: string | null
           isAdmin?: boolean | null
           name?: string | null
+          participations?: string[] | null
           stripe_current_period_end?: number | null
           stripe_customer_id?: string | null
           stripe_price_id?: string | null

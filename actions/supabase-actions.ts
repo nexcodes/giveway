@@ -94,6 +94,14 @@ export async function getPrizeForUser(prizeId: Prize["id"]) {
   return data;
 }
 
+export async function getAllPrizeForUser(prizeIds: Prize["id"][]) {
+  const supabase = createServerSupabaseClient();
+
+  const { data } = await supabase.from("prizes").select("*").in("id", prizeIds);
+
+  return data;
+}
+
 export async function getPublishedPost(postId: Post["id"]) {
   const supabase = createServerSupabaseClient();
   const { data } = await supabase
