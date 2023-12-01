@@ -1,23 +1,77 @@
 "use client";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Prize } from "@/types/prize";
 import { useState, useEffect } from "react";
 import { calculateRemainingTime } from "@/lib/utils";
+import { UserData } from "@/types/user-data";
+import Link from "next/link";
+import { Spinner } from "@/components/misc/spinner";
+import { toast } from "sonner";
 
 interface PrizeAreaProps {
   prize: Prize;
+  user: UserData | null;
 }
 
-const PrizeArea = ({ prize }: PrizeAreaProps) => {
+const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
   const [sliderValue, setSliderValue] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   const endTime = prize.time_end ? new Date(prize.time_end) : null;
+  // if (prize.participants) {
+  //   const emailExists = prize.participants.find(
+  //     (participant) => (participant?.email) === user?.email
+  //   );
+  // }
 
   const [time, setTime] = useState(endTime);
   const [remainingTime, setRemainingTime] = useState(
     endTime ? calculateRemainingTime(endTime) : null
   );
+
+  async function onAddParticipant() {
+    try {
+      setIsLoading(true);
+
+      const isEligible =
+        (user?.balance ?? 0) >= (prize.credit_need ?? 0) * sliderValue;
+
+      if (!isEligible) {
+        toast.error(
+          "You don't have enough credit to participate in this prize"
+        );
+        return;
+      }
+
+      const participants = [
+        ...(prize.participants ?? []),
+        {
+          email: user?.email,
+          weight: sliderValue,
+        },
+      ];
+
+      await fetch("/api/prize/addParticipant", {
+        method: "PATCH",
+        body: JSON.stringify({
+          prizeId: prize.id,
+          participants,
+          credit: (prize?.credit_need ?? 0) * sliderValue,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      toast.success("You have successfully participated in this prize");
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (time) {
@@ -108,7 +162,19 @@ const PrizeArea = ({ prize }: PrizeAreaProps) => {
               Multiply your change of winning
             </p>
           </div>
-          <Button className="w-full">I Participate</Button>
+          {user ? (
+            <button
+              type="button"
+              onClick={onAddParticipant}
+              className={buttonVariants({ className: "w-full" })}
+            >
+              {isLoading ? <Spinner /> : "I Participate"}
+            </button>
+          ) : (
+            <Link href={"/login"} className={buttonVariants()}>
+              Sign In to participate
+            </Link>
+          )}
           <p className="mt-2 leading-normal text-muted-foreground text-xs sm:text-sm">
             credit required: {(prize.credit_need ?? 0) * sliderValue}
           </p>

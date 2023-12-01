@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { absoluteUrl } from "@/lib/utils";
-import { getPublishedPrize } from "@/actions/supabase-actions";
+import { getPublishedPrize, getUser } from "@/actions/supabase-actions";
 import PrizeArea from "./prize-area";
 
 interface PageProps {
@@ -48,13 +48,12 @@ export async function generateMetadata({
 }
 
 export default async function PrizePage({ params }: PageProps) {
+  const user = await getUser();
   const prize = await getPublishedPrize(params.prizeId);
 
   if (!prize) {
     notFound();
   }
 
-  return (
-    <PrizeArea prize={prize} />
-  );
+  return <PrizeArea prize={prize} user={user} />;
 }

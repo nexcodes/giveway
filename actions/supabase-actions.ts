@@ -164,26 +164,3 @@ export async function createStripeCustomerId(
 
   return true;
 }
-
-export async function UpdateUserSubscription(
-  subscription_id: string,
-  stripe_current_period_end: number,
-  stripe_price_id: string,
-  email: string,
-  balance: number
-) {
-  const supabase = createServerSupabaseClient();
-  const { error } = await supabase
-    .from("users")
-    .update({
-      stripe_subscription_id: subscription_id,
-      stripe_current_period_end: stripe_current_period_end,
-      stripe_price_id: stripe_price_id,
-      balance,
-    })
-    .eq("email", email);
-
-  if (error) return false;
-
-  return true;
-}

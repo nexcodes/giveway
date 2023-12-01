@@ -1,3 +1,5 @@
+import { Json } from "./db";
+
 export interface Prize {
   id: string;
   title: string | null;
@@ -7,7 +9,7 @@ export interface Prize {
   prize_value: number | null;
   winner: string | null;
   time_end: string | null;
-  participants: string[] | null;
+  participants: Json[] | null;
   credit_need: number | null;
   published: boolean | null;
   author_id: string | null;
