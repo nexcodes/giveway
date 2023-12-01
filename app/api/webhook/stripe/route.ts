@@ -20,7 +20,7 @@ export async function POST(req: Request) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (error) {
+  } catch (error: any) {
     return new Response(`Webhook Error: ${error.message}`, { status: 400 });
   }
 
