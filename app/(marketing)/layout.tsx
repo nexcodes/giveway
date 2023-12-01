@@ -1,4 +1,4 @@
-import Navbar from "../../components/main-nav";
+import Navbar from "@/components/main-nav";
 import { getUser } from "@/actions/supabase-actions";
 
 export default async function MainLayout({

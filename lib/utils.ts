@@ -30,3 +30,28 @@ export const getURL = () => {
   url = url.concat("auth/callback");
   return url;
 };
+
+export function calculateRemainingTime(futureDate: Date) {
+  // Get the current date and time
+  let currentDate = new Date();
+
+  // Calculate the time difference in milliseconds
+  let timeDifference: number = futureDate.getTime() - currentDate.getTime();
+
+  // Calculate remaining days, hours, minutes, and seconds
+  let remainingDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  let remainingHours = Math.floor(
+    (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  let remainingMinutes = Math.floor(
+    (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+  );
+  let remainingSeconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+  return {
+    days: remainingDays,
+    hours: remainingHours,
+    minutes: remainingMinutes,
+    seconds: remainingSeconds,
+  };
+}

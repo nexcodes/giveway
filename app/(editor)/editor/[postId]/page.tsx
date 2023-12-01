@@ -1,20 +1,23 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { PostArea } from "../../_components/post-area";
-import { getPostForUser, getUser } from "@/actions/supabase-actions";
+import { getPublishedPost } from "@/actions/supabase-actions";
+import { Spinner } from "@/components/misc/spinner";
 
 interface EditorPageProps {
   params: { postId: string };
 }
 
-export default async function EditorPage({ params }: EditorPageProps) {
-  const user = await getUser();
+export default async function BlogPage({ params }: EditorPageProps) {
+  const post = await getPublishedPost(params.postId);
 
-  if (!user) {
-    redirect("/login");
+  if (post === undefined) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="lg" />
+      </div>
+    );
   }
-
-  const post = await getPostForUser(params.postId, user.id);
 
   if (!post) {
     notFound();
@@ -27,8 +30,8 @@ export default async function EditorPage({ params }: EditorPageProps) {
         title: post.title,
         content: post.content,
         published: post.published,
-        description: post.description,
         image: post.image,
+        description: post.description,
       }}
     />
   );

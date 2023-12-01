@@ -5,10 +5,15 @@ import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import useTranslation from 'next-translate/useTranslation'
 
 const myFont = localFont({ src: "../../../fonts/CalSans-SemiBold.ttf" });
 
 const Hero = () => {
+  const { t, lang } = useTranslation('home')
+  console.log(t('client-only'))
+  console.log(lang)
+
   return (
     <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
       <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
@@ -25,7 +30,10 @@ const Hero = () => {
           easy-to-use and secure online giveaway platform.
         </p>
         <div className="space-y-4 sm:space-y-0 sm:space-x-4 max-w-sm sm:max-w-none">
-          <Link className={buttonVariants({ className: "px-8 w-full sm:w-auto" })} href="/login">
+          <Link
+            className={buttonVariants({ className: "px-8 w-full sm:w-auto" })}
+            href="/login"
+          >
             Get Started
           </Link>
           <Link

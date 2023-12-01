@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { MobileNav } from "./mobile-nav";
 import { AlignLeft, Gift, X } from "lucide-react";
 import { Spinner } from "@/components/misc/spinner";
-import LanguageSwitch from "../app/(marketing)/_components/language-switch";
+import LanguageSwitch from "./language-switch";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { UserData } from "@/types/user-data";

@@ -8,12 +8,14 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { Prize } from "@/types/prize";
+import { useRouter } from "next/navigation";
 
 interface ButtonsProps {
   prize: Pick<Prize, "id" | "published">;
 }
 
-const Buttons = ({ prize: { id, published } }: ButtonsProps) => {
+const Buttons = ({ prize: { id, published = false } }: ButtonsProps) => {
+  const router = useRouter();
   const [isPublishing, setIsPublishing] = useState(false);
 
   async function handlePublish() {
@@ -33,8 +35,9 @@ const Buttons = ({ prize: { id, published } }: ButtonsProps) => {
           "Something went wrong. Your post was not published. Please try again."
         );
       }
-      published = !published;
-      return toast.success("Your post has been published.");
+      toast.success(`Your post has been ${published ? "un" : ""}published.`);
+      router.refresh();
+      return;
     } catch (error) {
       console.log(error, "Button_Error");
       toast.error(
@@ -59,7 +62,7 @@ const Buttons = ({ prize: { id, published } }: ButtonsProps) => {
         </Link>
       </div>
       <div className="space-x-2 flex">
-        <Button variant="ghost" onClick={handlePublish}>
+        <Button variant="ghost" type="button" onClick={handlePublish}>
           {isPublishing ? (
             <Spinner className="mr-2" />
           ) : published ? (
