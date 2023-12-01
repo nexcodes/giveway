@@ -8,12 +8,7 @@ export interface Prize {
   winner: string | null;
   time_end: string | null;
   created_at: string;
-  participants:
-    | {
-        weight: number;
-        email: string;
-      }[]
-    | null;
+  participants: string | null;
   credit_need: number | null;
   published: boolean | null;
   author_id: string | null;

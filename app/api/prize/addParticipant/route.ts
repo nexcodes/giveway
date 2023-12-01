@@ -36,7 +36,7 @@ export async function PATCH(req: Request) {
       await supabase
         .from("prizes")
         .update({
-          participants: json.participants,
+          participants: JSON.stringify(json.participants),
         })
         .eq("id", json.prizeId)
         .select();

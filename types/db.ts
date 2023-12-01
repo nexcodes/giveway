@@ -54,7 +54,7 @@ export interface Database {
           description: string | null
           id: string
           image: string | null
-          participants: Json[] | null
+          participants: string | null
           prize_value: number | null
           published: boolean | null
           time_end: string | null
@@ -69,7 +69,7 @@ export interface Database {
           description?: string | null
           id?: string
           image?: string | null
-          participants?: Json[] | null
+          participants?: string | null
           prize_value?: number | null
           published?: boolean | null
           time_end?: string | null
@@ -84,7 +84,7 @@ export interface Database {
           description?: string | null
           id?: string
           image?: string | null
-          participants?: Json[] | null
+          participants?: string | null
           prize_value?: number | null
           published?: boolean | null
           time_end?: string | null

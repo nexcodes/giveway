@@ -10,6 +10,7 @@ import { Spinner } from "@/components/misc/spinner";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
+import { Participant } from "@/types/participants";
 interface PrizeAreaProps {
   prize: Prize;
   user: UserData | null;
@@ -22,7 +23,9 @@ const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
   const [winningChance, setWinningChance] = useState<number>();
 
   useEffect(() => {
-    const participants = [...(prize.participants ?? [])];
+    const participants: Participant[] = JSON.parse(
+      prize.participants ?? JSON.stringify([])
+    );
     const totalWeight = participants.reduce((sum, obj) => sum + obj.weight, 0);
     const specificObject = participants.find(
       (obj) => obj.email === user?.email
@@ -55,7 +58,9 @@ const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
         return;
       }
 
-      const participants = [...(prize.participants ?? [])];
+      const participants: Participant[] = JSON.parse(
+        prize.participants ?? JSON.stringify([])
+      );
       const index = participants.findIndex(
         (item) => item.email === user?.email
       );
