@@ -15,22 +15,22 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { UserData } from "@/types/user-data";
 import { UserAccount } from "@/app/(main)/_components/user-account";
+import { useLanguageStore } from "@/zustand/language";
+import { content, links } from "@/messages/navbar/marketing-nav";
 
 interface MainNavProps {
   user: UserData | null;
-  items?: NavItem[];
   children?: React.ReactNode;
   Dashboard?: boolean;
 }
 
-export default function Navbar({
-  items,
-  children,
-  user,
-  Dashboard,
-}: MainNavProps) {
+export default function Navbar({ children, user, Dashboard }: MainNavProps) {
   const segment = useSelectedLayoutSegment();
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false);
+  const { language } = useLanguageStore();
+
+  const items = links[language.locale];
+  const { Dashboard: dashboard, SignIn } = content[language.locale];
 
   return (
     <header className="container px-4 sm:px-8 z-40 bg-background">
@@ -84,7 +84,7 @@ export default function Navbar({
                   href={"/dashboard"}
                   className={buttonVariants({ variant: "ghost" })}
                 >
-                  Dashboard
+                  {dashboard}
                 </Link>
               )
             ) : (
@@ -92,7 +92,7 @@ export default function Navbar({
                 href={"/login"}
                 className={buttonVariants({ variant: "outline" })}
               >
-                Sign In
+                {SignIn}
               </Link>
             )}
           </nav>

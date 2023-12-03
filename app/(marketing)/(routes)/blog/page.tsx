@@ -5,6 +5,7 @@ import { Spinner } from "@/components/misc/spinner";
 import { siteConfig } from "@/config/site";
 import { absoluteUrl } from "@/lib/utils";
 import { Metadata } from "next";
+import BlogArea from "./blog-area";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ogUrl = new URL(`${siteConfig.url}/api/og`);
@@ -65,21 +66,6 @@ export default async function Blog() {
   }
 
   return (
-    <section className="container max-w-4xl py-6 lg:py-10">
-      <div className="flex flex-col items-start gap-4 md:flex-row md:justify-between md:gap-8">
-        <div className="flex-1 space-y-4">
-          <h1 className="inline-block font-semibold text-4xl tracking-tight lg:text-5xl">
-            Blog
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Uncover the Depth of Our Blog
-          </p>
-        </div>
-      </div>
-      <Separator className="my-4" />
-      <div className="grid gap-10 sm:grid-cols-2">
-        {posts && posts.map((post) => <BlogCard key={post.id} post={post} />)}
-      </div>
-    </section>
+    <BlogArea posts={posts}/>
   );
 }

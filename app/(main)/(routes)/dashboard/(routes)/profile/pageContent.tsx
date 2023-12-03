@@ -2,20 +2,10 @@
 
 import { ProfileForm } from "@/app/(main)/_components/profile-form";
 import { Separator } from "@/components/ui/separator";
+import { content } from "@/messages/settings/profile";
 import { UserData } from "@/types/user-data";
 import { useLanguageStore } from "@/zustand/language";
 import React from "react";
-
-const content = {
-  English: {
-    title: "Profile",
-    description: "This is how others will see you on the site.",
-  },
-  French: {
-    title: "Profil",
-    description: "C'est ainsi que les autres vous verront sur le site.",
-  },
-};
 
 interface PageContentProps {
   user: UserData;
@@ -24,7 +14,7 @@ interface PageContentProps {
 const PageContent = ({ user }: PageContentProps) => {
   const { language } = useLanguageStore();
 
-  const { title, description } = content[language];
+  const { title, description } = content[language.locale];
 
   return (
     <div className="space-y-6">

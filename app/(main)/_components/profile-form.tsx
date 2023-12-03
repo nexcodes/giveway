@@ -23,6 +23,8 @@ import { Spinner } from "@/components/misc/spinner";
 import { UserData } from "@/types/user-data";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/types/db";
+import { useLanguageStore } from "@/zustand/language";
+import { profileForm } from "@/messages/settings/profile";
 
 const profileFormSchema = z.object({
   username: z
@@ -120,6 +122,9 @@ export function ProfileForm({ user }: ProfileFormProps) {
     };
   }
 
+  const { language } = useLanguageStore();
+  const { Username, email, update, change } = profileForm[language.locale];
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -128,7 +133,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>{Username}</FormLabel>
               <FormControl>
                 <Input
                   placeholder="David Mason"
@@ -145,7 +150,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{email}</FormLabel>
               <FormControl>
                 <Input placeholder="example@gmail.com" {...field} disabled />
               </FormControl>
@@ -164,7 +169,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
             htmlFor="Avatar"
             className="cursor-pointer hover:text-muted-foreground transition"
           >
-            change
+            {change}
           </Label>
           <input
             id="Avatar"
@@ -182,7 +187,10 @@ export function ProfileForm({ user }: ProfileFormProps) {
           />
         </div>
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? <Spinner className="mr-2" /> : "Update"}
+          <span>
+            {isLoading && <Spinner className="mr-2" />}
+            {!isLoading && update}
+          </span>
         </Button>
       </form>
     </Form>

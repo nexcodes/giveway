@@ -3,7 +3,6 @@ import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button";
 import { Prize } from "@/types/prize";
 import { useState, useEffect } from "react";
-import { calculateRemainingTime } from "@/lib/utils";
 import { UserData } from "@/types/user-data";
 import Link from "next/link";
 import { Spinner } from "@/components/misc/spinner";
@@ -11,6 +10,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { Participant } from "@/types/participants";
+import RemainingTime from "@/components/remaining-time";
 interface PrizeAreaProps {
   prize: Prize;
   user: UserData | null;
@@ -36,13 +36,6 @@ const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
       setWinningChance(winningChance);
     }
   }, [prize, user]);
-
-  const endTime = prize.time_end ? new Date(prize.time_end) : null;
-
-  const [time, setTime] = useState(endTime);
-  const [remainingTime, setRemainingTime] = useState(
-    endTime ? calculateRemainingTime(endTime) : null
-  );
 
   async function onAddParticipant() {
     try {
@@ -97,22 +90,6 @@ const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
     }
   }
 
-  useEffect(() => {
-    if (time) {
-      const interval = setInterval(() => {
-        setTime((prevTime) => prevTime && new Date(prevTime.getTime() - 500));
-      }, 500);
-
-      return () => clearInterval(interval);
-    }
-  }, [time]);
-
-  useEffect(() => {
-    if (time) {
-      setRemainingTime(calculateRemainingTime(time));
-    }
-  }, [time]);
-
   return (
     <section className="container px-5 py-4 mx-auto">
       <div className="flex flex-wrap">
@@ -141,32 +118,7 @@ const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
             <p className="my-2 leading-normal text-muted-foreground text-xs sm:text-sm">
               Lucky draw ends in:
             </p>
-            <div className="grid grid-cols-4 gap-2 sm:gap-4 text-muted-foreground">
-              <div className="border-2 border-neutral-199 rounded px-2 py-4 flex flex-col items-center justify-center space-y-1">
-                <p className="font-bold text-lg text-primary">
-                  {remainingTime?.days || 0}
-                </p>
-                <p className="font-medium text-sm">Days</p>
-              </div>
-              <div className="border-2 border-neutral-199 rounded px-2 py-4 flex flex-col items-center justify-center space-y-1">
-                <p className="font-bold text-lg text-primary">
-                  {remainingTime?.hours || 0}
-                </p>
-                <p className="font-medium text-sm">Hours</p>
-              </div>
-              <div className="border-2 border-neutral-199 rounded px-2 py-4 flex flex-col items-center justify-center space-y-1">
-                <p className="font-bold text-lg text-primary">
-                  {remainingTime?.minutes || 0}
-                </p>
-                <p className="font-medium text-sm">Minutes</p>
-              </div>
-              <div className="border-2 border-neutral-199 rounded px-2 py-4 flex flex-col items-center justify-center space-y-1">
-                <p className="font-bold text-lg text-primary">
-                  {remainingTime?.seconds || 0}
-                </p>
-                <p className="font-medium text-sm">Seconds</p>
-              </div>
-            </div>
+            <RemainingTime time_end={prize.time_end} />
           </div>
 
           <div>
@@ -205,9 +157,9 @@ const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
           {winningChance && (
             <>
               <Separator />
-              <div className="border-2 border-neutral-199 rounded px-2 py-4 flex flex-col items-center justify-center space-y-1">
+              <div className="border-2 border-neutral-200 rounded px-2 py-4 flex flex-col items-center justify-center space-y-1">
                 <p className="font-bold text-lg text-primary">
-                  {winningChance}%
+                  {winningChance.toFixed(2)}%
                 </p>
                 <p className="font-medium text-sm">your chance you winning</p>
               </div>

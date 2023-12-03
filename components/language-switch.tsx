@@ -10,13 +10,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Globe } from "lucide-react";
 import React from "react";
-import { LanguagesType } from "@/types/language";
 import { useLanguageStore } from "@/zustand/language";
 
 const LanguageSwitch = () => {
   const { language, setLanguage } = useLanguageStore();
 
-  const languages = ["English", "French"];
+  const languages = [
+    {
+      name: "English",
+      locale: "en",
+    },
+    {
+      name: "French",
+      locale: "fr",
+    },
+  ];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -25,13 +34,16 @@ const LanguageSwitch = () => {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {languages.map((lang) => (
+        {languages.map((item) => (
           <DropdownMenuItem
-            key={lang}
-            className={cn("cursor-pointer", language === lang && "bg-accent")}
-            onClick={() => setLanguage(lang as LanguagesType)}
+            key={item.locale}
+            className={cn(
+              "cursor-pointer",
+              language.locale === item.locale && "bg-accent"
+            )}
+            onClick={() => setLanguage(item)}
           >
-            {lang}
+            {item.name}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

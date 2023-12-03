@@ -4,7 +4,6 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Auth } from "@supabase/auth-ui-react";
 
 import { Database } from "@/types/db";
-import { getURL } from "@/lib/utils";
 import { useOrigin } from "@/hooks/use-origin";
 
 export default function UserAuthForm() {
@@ -12,7 +11,6 @@ export default function UserAuthForm() {
   const ORIGIN = useOrigin();
 
   return (
-    
     <div className="flex flex-col space-y-4">
       <Auth
         supabaseClient={supabase}

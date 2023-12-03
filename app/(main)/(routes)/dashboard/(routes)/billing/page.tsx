@@ -4,37 +4,11 @@ import { stripe } from "@/lib/stripe";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { createStripeCustomerId, getUser } from "@/actions/supabase-actions";
 import { CurrentPlan } from "@/app/(main)/_components/current-plan";
-import PricingCard from "@/app/(main)/_components/pricing-card";
+import PricingSection from "./pricing-section";
 
 export const metadata = {
   title: "Billing",
   description: "Manage billing and your subscription plan.",
-};
-
-const pricing_1 = {
-  title: "What's included in the Premium plan",
-  bill: "Billed Monthly",
-  button: "Upgrade to Premium",
-  price: "$29",
-  features: [
-    { content: "500 Credits", check: true },
-    { content: "Daily free Coupons", check: true },
-    { content: "Daily 15 free credits", check: true },
-    { content: "Access to Random Draw", check: true },
-  ],
-};
-
-const pricing_2 = {
-  title: "What's included in the Pro plan",
-  bill: "Billed Monthly",
-  button: "Upgrade to Pro",
-  price: "$19",
-  features: [
-    { content: "300 Credits", check: true },
-    { content: "Weekly free Coupons", check: true },
-    { content: "Daily 10 free credits", check: true },
-    { content: "Access to Random Draw", check: true },
-  ],
 };
 
 export default async function BillingPage() {
@@ -77,12 +51,7 @@ export default async function BillingPage() {
           isCanceled,
         }}
       />
-      {subscriptionPlan.NoPlanActive && (
-        <>
-          <PricingCard {...pricing_1} route={"premium"} />
-          <PricingCard {...pricing_2} route={"pro"} />
-        </>
-      )}
+      {subscriptionPlan.NoPlanActive && <PricingSection />}
     </div>
   );
 }

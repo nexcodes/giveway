@@ -138,7 +138,7 @@ export async function getAllPublishedPrize() {
   const supabase = createServerSupabaseClient();
   const { data } = await supabase
     .from("prizes")
-    .select("title , image , id, credit_need , time_end, winner")
+    .select("title , image , id, credit_need , time_end, winner , prize_value")
     .order("created_at", { ascending: false })
     .eq("published", true);
 

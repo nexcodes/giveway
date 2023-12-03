@@ -29,6 +29,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import { Participant } from "@/types/participants";
 
 const formSchema = z.object({
   title: z.string(),
@@ -48,6 +49,7 @@ export default function PrizeForm({ prize }: PrizeFormProps) {
   const [file, setFile] = useState<File | null>();
   const [base64File, setBase64File] = useState<string | ArrayBuffer | null>();
   const [isLoading, setIsLoading] = useState(false);
+  const [selectingWinner, setSelectingWinner] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -129,6 +131,65 @@ export default function PrizeForm({ prize }: PrizeFormProps) {
       setIsLoading(false);
     }
   }
+
+  function weightedRandomChoice(participants: Prize["participants"]) {
+    const users: Participant[] = JSON.parse(participants ?? "[]");
+    if(!users.length) return null;
+
+    const totalWeight = users.reduce((sum, user) => sum + user.weight, 0);
+    const randNum = Math.random() * totalWeight;
+    let cumulativeWeight = 0;
+
+    for (const user of users) {
+      cumulativeWeight += user.weight;
+      if (randNum < cumulativeWeight) {
+        return user.email;
+      }
+    }
+  }
+
+  const selectWinner = async () => {
+    try {
+      setSelectingWinner(true);
+      
+      const _response = await fetch(`/api/prize/${prize.id}/matchTimeEnd`);
+
+      const data = await _response.json();
+
+      if (data[0].winner) {
+        return toast.error("A winner has already been selected.");
+      }
+
+      if (!data[0].time_end) {
+        return toast.error("The lucky draw has not ended yet.");
+      }
+
+      const winner = weightedRandomChoice(prize.participants);
+
+      if(!winner) {
+        return toast.error("No participants found.");
+      }
+
+      const response = await fetch(`/api/prize/${prize.id}/winner`, {
+        method: "PATCH",
+        body: JSON.stringify({ winner }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response?.ok) {
+        return toast.error(
+          "Something went wrong. Your winner was not saved. Please try again."
+        );
+      }
+      form.setValue("winner", winner ?? "");
+      toast.success("Your winner has been saved.");
+    } catch (error) {
+      console.error(error, "PRIZE_FORM_ERROR");
+    } finally {
+      setSelectingWinner(false);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -290,6 +351,9 @@ export default function PrizeForm({ prize }: PrizeFormProps) {
               <FormControl>
                 <Input placeholder="Winner" {...field} disabled />
               </FormControl>
+              <Button type="button" onClick={selectWinner}>
+                {selectingWinner ? <Spinner /> : "Select winner"}
+              </Button>
               <FormDescription>
                 This is the winner of the prize.
               </FormDescription>

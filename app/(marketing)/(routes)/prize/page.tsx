@@ -86,6 +86,7 @@ export default async function PrizePage() {
                 title: prize.title,
                 credit_need: prize.credit_need,
                 image: prize.image,
+                prize_value: prize.prize_value,
                 time_end: prize.time_end?.toString() || "",
               }}
             />

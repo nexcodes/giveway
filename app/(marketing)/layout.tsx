@@ -8,25 +8,12 @@ export default async function MainLayout({
 }) {
   const user = await getUser();
 
-  const items =  [
-    {
-      title: "Pricing",
-      href: "/pricing",
-    },
-    {
-      title: "Blog",
-      href: "/blog",
-    },
-    {
-      title: "Prizes",
-      href: "/prize",
-    },
-  ]
+  
 
   return (
     <main>
       <>
-        <Navbar items={items} user={user} />
+        <Navbar user={user} />
         {children}
       </>
     </main>

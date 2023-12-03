@@ -4,21 +4,11 @@ import { AppearanceForm } from "@/app/(main)/_components/appearance-form";
 import { useLanguageStore } from "@/zustand/language";
 import { Separator } from "@/components/ui/separator";
 import React from "react";
-
-const content = {
-  English: {
-    title: "Appearance",
-    description: "Customize the appearance of the app.",
-  },
-  French: {
-    title: "Apparence",
-    description: "Personnalisez l'apparence de l'application.",
-  },
-};
+import { content } from "@/messages/settings/apperence";
 
 const PageContent = () => {
   const { language } = useLanguageStore();
-  const { title, description } = content[language];
+  const { title, description } = content[language.locale];
   return (
     <div className="space-y-6">
       <div>
