@@ -22,21 +22,10 @@ export default async function MainLayout({
     redirect("/login");
   }
 
-  const items = [
-    {
-      title: "Blog",
-      href: "/blog",
-    },
-    {
-      title: "Prizes",
-      href: "/prize",
-    },
-  ];
-
   return (
     <main>
       <>
-        <Navbar items={items} user={user} Dashboard />
+        <Navbar user={user} Dashboard />
         {children}
       </>
     </main>
