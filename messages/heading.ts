@@ -10,3 +10,14 @@ export const BlogHeading: Content = {
     subtitle: "Découvrez la profondeur de notre blog",
   },
 };
+
+export const PrizeHeading: Content = {
+  en: {
+    title: "Prizes",
+    subtitle: "These are the all prizes you can participate in",
+  },
+  fr: {
+    title: "Blog",
+    subtitle: "Découvrez la profondeur de notre blog",
+  },
+};

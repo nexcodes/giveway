@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button";
 import { Prize } from "@/types/prize";
@@ -8,9 +9,12 @@ import Link from "next/link";
 import { Spinner } from "@/components/misc/spinner";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Separator } from "@/components/ui/separator";
 import { Participant } from "@/types/participants";
 import RemainingTime from "@/components/remaining-time";
+import { useLanguageStore } from "@/zustand/language";
+import { content } from "@/messages/prize/prize";
+import axios from "axios";
+import WinningChance from "@/app/(marketing)/_components/winning-chance";
 interface PrizeAreaProps {
   prize: Prize;
   user: UserData | null;
@@ -18,24 +22,63 @@ interface PrizeAreaProps {
 
 const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
   const router = useRouter();
-  const [sliderValue, setSliderValue] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [winningChance, setWinningChance] = useState<number>();
+
+  const { language } = useLanguageStore();
+
+  const [dbcontent, setDbContent] = useState<{ [key: string]: string | null }>({
+    title: prize.title,
+    description: prize.description,
+  });
 
   useEffect(() => {
-    const participants: Participant[] = JSON.parse(
-      prize.participants ?? JSON.stringify([])
-    );
-    const totalWeight = participants.reduce((sum, obj) => sum + obj.weight, 0);
-    const specificObject = participants.find(
-      (obj) => obj.email === user?.email
-    );
+    const TranslateText = async () => {
+      if (language.locale === "en") return;
 
-    if (specificObject) {
-      const winningChance = (specificObject.weight / totalWeight) * 100;
-      setWinningChance(winningChance);
-    }
-  }, [prize, user]);
+      const options = {
+        method: "POST",
+        url: "https://microsoft-translator-text.p.rapidapi.com/translate",
+        params: {
+          "to[0]": "fr",
+          "api-version": "3.0",
+          profanityAction: "NoAction",
+          textType: "plain",
+        },
+        headers: {
+          "content-type": "application/json",
+          "X-RapidAPI-Key":
+            "7489783a7amshf0c4b41472678fcp1cbe8fjsn4c526a3587eb",
+          "X-RapidAPI-Host": "microsoft-translator-text.p.rapidapi.com",
+        },
+        data: [
+          {
+            text: prize.title,
+          },
+          {
+            text: prize.description,
+          },
+        ],
+      };
+      const response = await axios.request(options);
+
+      console.log(
+        response.data[0].translations[0].text,
+        response.data[1].translations[0].text
+      );
+
+      setDbContent({
+        title: response.data[0].translations[0].text,
+        description: response.data[1].translations[0].text,
+      });
+    };
+
+    TranslateText();
+  }, [language.locale, prize.title, prize.description]);
+
+  const { ends_in, multiply, SignIn, chance, credit_require } =
+    content[language.locale];
+
+  const [sliderValue, setSliderValue] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function onAddParticipant() {
     try {
@@ -103,20 +146,20 @@ const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
             />
           </div>
           <h2 className="md:hidden font-bold text-3xl sm:text-4xl">
-            {prize.title}
+            {dbcontent.title}
           </h2>
           <p className="max-w-[42rem] leading-normal text-muted-foreground text-base sm:text-xl sm:leading-8">
-            {prize.description}
+            {dbcontent.description}
           </p>
         </div>
 
         <div className="lg:w-[30%] w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 space-y-4">
           <h2 className="hidden md:block font-bold text-5xl lg:text-6xl">
-            {prize.title}
+            {dbcontent.title}
           </h2>
           <div>
             <p className="my-2 leading-normal text-muted-foreground text-xs sm:text-sm">
-              Lucky draw ends in:
+              {ends_in}
             </p>
             <RemainingTime time_end={prize.time_end} />
           </div>
@@ -135,7 +178,7 @@ const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
             />
 
             <p className="mt-2 leading-normal text-muted-foreground text-xs sm:text-sm">
-              Multiply your change of winning
+              {multiply}
             </p>
           </div>
           {user ? (
@@ -148,23 +191,17 @@ const PrizeArea = ({ prize, user }: PrizeAreaProps) => {
             </button>
           ) : (
             <Link href={"/login"} className={buttonVariants()}>
-              Sign In to participate
+              {SignIn}
             </Link>
           )}
           <p className="mt-2 leading-normal text-muted-foreground text-xs sm:text-sm">
-            credit required: {(prize.credit_need ?? 0) * sliderValue}
+            {credit_require} {(prize.credit_need ?? 0) * sliderValue}
           </p>
-          {winningChance && (
-            <>
-              <Separator />
-              <div className="border-2 border-neutral-200 rounded px-2 py-4 flex flex-col items-center justify-center space-y-1">
-                <p className="font-bold text-lg text-primary">
-                  {winningChance.toFixed(2)}%
-                </p>
-                <p className="font-medium text-sm">your chance you winning</p>
-              </div>
-            </>
-          )}
+          <WinningChance
+            participants={prize.participants}
+            email={user?.email}
+            chance={chance}
+          />
         </div>
       </div>
     </section>
